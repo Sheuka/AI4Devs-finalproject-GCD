@@ -1,0 +1,11 @@
+{
+  "name": "handyman-platform-backend",
+  "version": "1.0.0",
+  "description": "Backend services for handyman platform",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
