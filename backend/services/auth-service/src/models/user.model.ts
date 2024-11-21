@@ -1,13 +1,10 @@
-import { UserRole, $Enums, User } from "@prisma/client";
-
-
-// Tipo para crear un nuevo usuario
+// Tipo para crear un usuario
 export interface CreateUserDTO {
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
-  role: UserRole | typeof $Enums.UserRole.CLIENT;
+  role: UserRole;
+  firstName?: string;
+  lastName?: string;
   phoneNumber?: string;
   profilePicture?: string;
 }
@@ -28,6 +25,7 @@ export interface UserResponse {
   email: string;
   firstName: string;
   lastName: string;
+  password: string;
   role: UserRole;
   isActive: boolean;
   phoneNumber: string | null;
@@ -36,16 +34,8 @@ export interface UserResponse {
   updatedAt: Date;
 }
 
-// Función para sanitizar la respuesta del usuario
-export function sanitizeUser(user: User): UserResponse {
-  const {
-    password,
-    ...userWithoutPassword
-  } = user;
-  
-  return {
-    ...userWithoutPassword,
-    phoneNumber: user.phoneNumber || null,
-    profilePicture: user.profilePicture || null
-  };
+export enum UserRole {
+  CLIENT = 'CLIENT',
+  PROFESSIONAL = 'PROFESSIONAL',
+  ADMIN = 'ADMIN',
 }

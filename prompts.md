@@ -385,3 +385,12 @@ Sigamos con el punto 6. Tickets de Trabajo. Documenta 3 de los tickets de trabaj
 **Prompt 2:**
 
 **Prompt 3:**
+
+
+### Creación del servico de usuario
+**Prompt 1:**
+Ya tenemos creado el servico 'auth-service' en la carpeta @auth-service  . Ahora vamos a seguir con el servico 'user-service' que estará en la carpeta @user-service .  Tomando como base el servicio 'auth-service' genera los comandos para la consola para crear los ficheros necesarios para implementar el servicio 'user-service'. Si tienes alguna duda pregúntame antes de escribir la respuesta final. Utiliza new-item para la creación de nuevos ficheros. Ten en cuenta la estructura actual de @user-service para no crear nada que ya exista
+
+**Prompt 2:**
+
+**Prompt 3:**
