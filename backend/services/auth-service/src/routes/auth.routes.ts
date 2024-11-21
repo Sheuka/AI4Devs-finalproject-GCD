@@ -80,14 +80,6 @@ const resetPasswordValidation = [
   ...validatePassword(8),
 ];
 
-// Validaciones para cambiar contraseña
-const changePasswordValidation = [
-  body('currentPassword')
-    .notEmpty()
-    .withMessage('La contraseña actual es requerida'),
-  ...validatePassword(8),
-];
-
 // Rutas públicas
 router.post(
   '/register',
@@ -124,27 +116,6 @@ router.get(
   '/me',
   authenticateToken,
   AuthController.getCurrentUser
-);
-
-router.post(
-  '/logout',
-  authenticateToken,
-  AuthController.logout
-);
-
-router.put(
-  '/change-password',
-  authenticateToken,
-  changePasswordValidation,
-  validateRequest,
-  AuthController.changePassword
-);
-
-// Ruta de verificación de token
-router.get(
-  '/verify-token',
-  authenticateToken,
-  AuthController.verifyToken
 );
 
 export default router;

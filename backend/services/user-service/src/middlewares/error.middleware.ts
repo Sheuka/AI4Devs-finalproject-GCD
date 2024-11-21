@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { AuthenticationError, DatabaseError } from '../utils/errors';
 
 interface ErrorResponse {
@@ -57,4 +57,5 @@ export default function errorMiddleware(
       ...(errorResponse.stack && { stack: errorResponse.stack })
     }
   });
+  return;
 }

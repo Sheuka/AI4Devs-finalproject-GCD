@@ -2,110 +2,82 @@ import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { testUser } from '../fixtures/users';
 import { AuthenticationError } from '../../utils/errors';
-import bcrypt from 'bcryptjs';
-import { UserRole } from '@prisma/client';
+import { config } from '../../config';
 
 describe('AuthService', () => {
   let authService: AuthService;
   let userService: jest.Mocked<UserService>;
 
   beforeEach(() => {
-    // Crear un mock de UserService
     userService = {
       findByEmail: jest.fn(),
       create: jest.fn(),
-      updatePassword: jest.fn(),
+      update: jest.fn(),
       findById: jest.fn(),
     } as unknown as jest.Mocked<UserService>;
 
-    // Instanciar AuthService con el UserService mockeado
     authService = new AuthService(userService);
+    AuthService.clearResetTokensMap();
   });
 
-  describe('login', () => {
-    it('debería autenticar un usuario con credenciales válidas', async () => {
-      // Configurar el mock para encontrar el usuario
-      userService.findByEmail.mockResolvedValue({
-        id: 'user123',
-        email: testUser.email,
-        password: await bcrypt.hash(testUser.password, 10),
-        firstName: testUser.firstName,
-        lastName: testUser.lastName,
-        role: UserRole.CLIENT,
-        isActive: true,
-        phoneNumber: null,
-        profilePicture: null,
-        lastLogin: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+  describe('generatePasswordResetToken', () => {
+    it('debería generar un token válido', async () => {
+      const userId = 'test-user-id';
+      const token = await authService.generatePasswordResetToken(userId);
 
-      const result = await authService.login(testUser.email, testUser.password);
-
-      expect(result).toHaveProperty('token');
-      expect(result.user).toHaveProperty('email', testUser.email);
-      expect(result.user).not.toHaveProperty('password');
-      expect(userService.findByEmail).toHaveBeenCalledWith(testUser.email);
+      expect(token).toBeDefined();
+      expect(typeof token).toBe('string');
+      expect(token.length).toBeGreaterThan(0);
     });
 
-    it('debería fallar con credenciales inválidas', async () => {
-      // Configurar el mock para que no encuentre el usuario
-      userService.findByEmail.mockResolvedValue(null);
-
-      await expect(
-        authService.login(testUser.email, 'wrongpass')
-      ).rejects.toThrow(AuthenticationError);
+    it('debería almacenar el token con fecha de expiración correcta', async () => {
+      const userId = 'test-user-id';
+      const token = await authService.generatePasswordResetToken(userId);
+      
+      // @ts-ignore - Acceder a la propiedad privada para testing
+      const tokenData = AuthService['resetTokensMap'].get(token);
+      
+      expect(tokenData).toBeDefined();
+      expect(tokenData?.userId).toBe(userId);
+      
+      const expectedExpiration = new Date();
+      expectedExpiration.setHours(expectedExpiration.getHours() + config.PASSWORD_RESET_TOKEN_EXPIRATION_HOURS);
+      
+      // Comparar solo las horas para evitar diferencias de milisegundos
+      expect(tokenData?.expiresAt.getHours()).toBe(expectedExpiration.getHours());
     });
   });
 
-  describe('register', () => {
-    it('debería registrar un nuevo usuario exitosamente', async () => {
-      // Configurar el mock para que no exista el usuario
-      userService.findByEmail.mockResolvedValue(null);
-      userService.create.mockResolvedValue({
-        id: 'user123',
-        email: testUser.email,
-        password: await bcrypt.hash(testUser.password, 10),
-        firstName: testUser.firstName,
-        lastName: testUser.lastName,
-        role: UserRole.CLIENT,
-        isActive: true,
-        phoneNumber: null,
-        profilePicture: null,
-        lastLogin: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+  describe('verifyPasswordResetToken', () => {
+    it('debería verificar un token válido correctamente', async () => {
+      const userId = testUser.id;
+      userService.findById.mockResolvedValue(testUser);
+      
+      const token = await authService.generatePasswordResetToken(userId);
+      const user = await authService.verifyPasswordResetToken(token);
 
-      const result = await authService.register(testUser as any);
-
-      expect(result).toHaveProperty('token');
-      expect(result.user).toHaveProperty('email', testUser.email);
-      expect(result.user).not.toHaveProperty('password');
-      expect(userService.findByEmail).toHaveBeenCalledWith(testUser.email);
-      expect(userService.create).toHaveBeenCalled();
+      expect(user).toEqual(testUser);
+      expect(userService.findById).toHaveBeenCalledWith(userId);
     });
 
-    it('debería fallar si el email ya está registrado', async () => {
-      // Configurar el mock para que el usuario ya exista
-      userService.findByEmail.mockResolvedValue({
-        id: 'user123',
-        email: testUser.email,
-        password: 'hashedpassword',
-        firstName: testUser.firstName,
-        lastName: testUser.lastName,
-        role: UserRole.CLIENT,
-        isActive: true,
-        phoneNumber: null,
-        profilePicture: null,
-        lastLogin: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+    it('debería rechazar un token inválido', async () => {
+      await expect(authService.verifyPasswordResetToken('invalid-token'))
+        .rejects
+        .toThrow(new AuthenticationError('Token inválido'));
+    });
 
-      await expect(
-        authService.register(testUser as any)
-      ).rejects.toThrow('El email ya está registrado');
+    it('debería rechazar un token expirado', async () => {
+      const userId = testUser.id;
+      userService.findById.mockResolvedValue(testUser);
+      
+      const token = await authService.generatePasswordResetToken(userId);
+      
+      // @ts-ignore - Acceder a la propiedad privada para testing
+      AuthService['resetTokensMap'].get(token).expiresAt = new Date(Date.now() - 1000);
+      
+      await expect(authService.verifyPasswordResetToken(token))
+        .rejects
+        .toThrow(new AuthenticationError('Token expirado'));
     });
   });
 });

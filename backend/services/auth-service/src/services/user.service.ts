@@ -1,46 +1,88 @@
-import { prisma } from '../lib/prisma';
-import { User } from '@prisma/client';
-import { DatabaseError } from '../utils/errors';
+import axios from 'axios';
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+import { CreateUserDTO, UserResponse } from '../models/user.model';
+import { config } from '../config';
+import { AccessTokenPayload } from '../types/auth.types';
+
+dotenv.config();
+
+const USER_SERVICE_URL = process.env.USER_SERVICE_URL;
 
 export class UserService {
-  async findByEmail(email: string): Promise<User | null> {
+  private authToken: string;  
+
+  constructor() {
+    this.authToken = this.getAuthToken();
+  }
+
+  async findByEmail(email: string): Promise<UserResponse | null> {
     try {
-      return await prisma.user.findUnique({
-        where: { email }
+      const response = await axios.get(`${USER_SERVICE_URL}/email/${email}`, {
+        headers: {
+          Authorization: `Bearer ${this.authToken}`
+        }
       });
-    } catch (error) {
-      throw new DatabaseError('Error al buscar usuario por email');
+      return response.data.user;
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        return null;
+      }
+      throw new Error('Error al comunicarse con el User Service');
     }
   }
 
-  async findById(id: string): Promise<User | null> {
+  async findById(id: string): Promise<UserResponse | null> {
     try {
-      return await prisma.user.findUnique({
-        where: { id }
+      const response = await axios.get(`${USER_SERVICE_URL}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${this.authToken}`
+        }
       });
-    } catch (error) {
-      throw new DatabaseError('Error al buscar usuario por ID');
+      return response.data.user;
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        return null;
+      }
+      throw new Error('Error al comunicarse con el User Service');
     }
   }
 
-  async create(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User> {
+  async create(userData: CreateUserDTO): Promise<UserResponse> {
     try {
-      return await prisma.user.create({
-        data: userData
+      const response = await axios.post(`${USER_SERVICE_URL}/register`, userData, {
+        headers: {
+          Authorization: `Bearer ${this.authToken}`
+        }
       });
-    } catch (error) {
-      throw new DatabaseError('Error al crear usuario');
+      return response.data.user;
+    } catch (error: any) {
+      throw new Error('Error al comunicarse con el User Service para crear usuario');
     }
   }
 
-  async updatePassword(userId: string, hashedPassword: string): Promise<void> {
+  async update(id: string, updateData: Partial<UserResponse>): Promise<UserResponse> {
     try {
-      await prisma.user.update({
-        where: { id: userId },
-        data: { password: hashedPassword }
+      const response = await axios.put(`${USER_SERVICE_URL}/${id}`, updateData, {
+        headers: {
+          Authorization: `Bearer ${this.authToken}`
+        }
       });
-    } catch (error) {
-      throw new DatabaseError('Error al actualizar contraseña');
+      return response.data.user;
+    } catch (error: any) {
+      throw new Error('Error al comunicarse con el User Service para actualizar usuario');
     }
+  }
+
+  private getAuthToken(): string {
+    const tokenPayload: AccessTokenPayload = {
+      clientId: config.APP_NAME,
+      iat: Date.now(),
+      exp: Date.now() + 3600000, // 1 hora
+    }
+
+    const token = jwt.sign(tokenPayload, config.USER_SERVICE_JWT_SECRET);
+
+    return token;
   }
 }

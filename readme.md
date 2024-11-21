@@ -16,6 +16,7 @@
 ### **0.1. Tu nombre completo:**
 
 ### **0.2. Nombre del proyecto:**
+ChapuExpress
 
 ### **0.3. Descripción breve del proyecto:**
 
@@ -112,6 +113,49 @@ Estas funcionalidades proporcionan el núcleo esencial para una experiencia func
 ### **2.1. Diagrama de arquitectura:**
 
 #### Diagrama Principal de Arquitectura
+
+#### 1. **Frontend**
+- **React Client**: Es la interfaz de usuario desarrollada con React. Es responsable de interactuar con el usuario final, manejando la presentación y la lógica de la interfaz.
+
+#### 2. **API Gateway**
+- **AWS API Gateway**: Actúa como el punto de entrada principal para todas las solicitudes que provienen del cliente React. Gestiona el enrutamiento de las solicitudes a los microservicios adecuados en el backend, asegurando la seguridad, el control de tráfico y la gestión de APIs.
+
+#### 3. **Backend Microservices**
+El backend está compuesto por múltiples microservicios, cada uno responsable de una funcionalidad específica:
+- **AuthService (Autenticación)**: Maneja la autenticación de usuarios, asegurando que solo usuarios autorizados puedan acceder a ciertos recursos.
+- **UserService (Gestión de Usuarios)**: Administra la información de los usuarios, incluyendo el registro, actualización y gestión de perfiles.
+- **ProjectService (Gestión de Proyectos)**: Se encarga de la creación, actualización y gestión de proyectos dentro de la aplicación.
+- **ChatService (Chat y Mensajería)**: Facilita la comunicación en tiempo real entre los usuarios mediante funcionalidades de chat y mensajería.
+- **NotificationService (Notificaciones)**: Gestiona el envío de notificaciones a los usuarios, tanto en tiempo real como por otros medios.
+- **PaymentService (Pagos Seguros)**: Maneja las transacciones financieras, asegurando que los pagos sean seguros y confiables.
+- **RatingService (Valoraciones)**: Permite a los usuarios calificar y valorar diferentes aspectos de la aplicación o servicios ofrecidos.
+
+#### 4. **Base de Datos**
+- **Amazon RDS**: Base de datos relacional utilizada por varios microservicios para almacenar datos estructurados como usuarios, proyectos, pagos, etc.
+- **DynamoDB**: Base de datos NoSQL utilizada por servicios que requieren alta escalabilidad y rendimiento, como el ChatService y NotificationService.
+
+#### 5. **Almacenamiento en la Nube**
+- **AWS S3**: Servicio de almacenamiento utilizado por el ProjectService para almacenar y gestionar archivos relacionados con proyectos, como documentos, imágenes, etc.
+
+#### 6. **Sistema de Eventos**
+- **SQS (Cola de Mensajes)**: Utilizada por el ChatService para manejar la comunicación asíncrona y la gestión de mensajes, garantizando que los mensajes se procesen de manera eficiente.
+- **SNS Chat Topic**: Tópico de notificaciones específico para el chat, permitiendo el envío de actualizaciones en tiempo real a los usuarios involucrados en conversaciones.
+- **SNS Notification Topic**: Tópico general para notificaciones, utilizado por el NotificationService para enviar diversas notificaciones a los usuarios.
+
+#### 7. **Interacciones Entre Componentes**
+- El **React Client** se comunica con el **API Gateway**, que luego enruta las solicitudes a los microservicios correspondientes.
+- Los microservicios **AuthService**, **UserService**, **ProjectService**, **PaymentService** y **RatingService** interactúan con **Amazon RDS** para operaciones de lectura y escritura de datos.
+- **ChatService** y **NotificationService** utilizan **DynamoDB** para manejar datos que requieren alta disponibilidad y rendimiento.
+- **ProjectService** utiliza **AWS S3** para almacenar archivos relacionados con los proyectos.
+- **ChatService** envía mensajes a **SQSQueue** para procesamiento asíncrono, mientras que **NotificationService** publica notificaciones en los tópicos **SNSChatTopic** y **SNSNotificationTopic** para informar a los usuarios en tiempo real.
+
+#### 8. **Beneficios de esta Arquitectura**
+- **Escalabilidad**: La utilización de microservicios y servicios gestionados como AWS API Gateway, RDS y DynamoDB permite escalar componentes individualmente según la demanda.
+- **Mantenibilidad**: La separación de responsabilidades en diferentes servicios facilita el mantenimiento y la actualización del sistema sin afectar a otros componentes.
+- **Resiliencia**: El uso de colas de mensajes y sistemas de notificaciones garantiza que el sistema pueda manejar fallos y picos de tráfico de manera eficiente.
+- **Seguridad**: AWS API Gateway y los servicios de autenticación aseguran que las comunicaciones y los datos estén protegidos contra accesos no autorizados.
+
+Esta arquitectura modular y basada en microservicios proporciona una base sólida para desarrollar aplicaciones robustas, escalables y fáciles de mantener.
 
 ```mermaid
 flowchart TD
@@ -299,21 +343,21 @@ La plataforma se compone de varios servicios y tecnologías que trabajan juntos 
 
 #### **Backend Microservicios**
 
-Cada microservicio está implementado en **Node.js** utilizando **Express** o **NestJS**, dependiendo de la complejidad del servicio. Node.js es conocido por su alta capacidad de manejo de solicitudes en tiempo real, ideal para aplicaciones con componentes de mensajería y notificaciones.
+Cada microservicio está implementado en **Node.js** utilizando **Express**. Node.js es conocido por su alta capacidad de manejo de solicitudes en tiempo real, ideal para aplicaciones con componentes de mensajería y notificaciones.
 
 1. **Microservicio de Autenticación**
    - **Descripción**: Gestiona la autenticación de usuarios y la autorización de roles. Este servicio verifica las credenciales de los usuarios y maneja la creación de tokens de autenticación.
-   - **Tecnología**: Implementación en Node.js utilizando AWS Cognito para la gestión de autenticación y autorización, y Amazon RDS para el almacenamiento de datos relacionados con la autenticación.
+   - **Tecnología**: Implementación en Node.js utilizando la librería jsonwebtoken para la gestión de autenticación y autorización, y usa el microservicio de gestión de usuarios para almacenar los datos de los usuarios.
    - **Funcionalidad clave**: Login, registro, y recuperación de contraseñas.
 
 2. **Microservicio de Gestión de Usuarios**
    - **Descripción**: Gestiona los datos de los usuarios, incluyendo información de perfil, suscripciones y preferencias de notificaciones.
-   - **Tecnología**: Implementación en Node.js y Express con almacenamiento en Amazon RDS.
+   - **Tecnología**: Implementación en Node.js y Express con almacenamiento en PostgreSQL.
    - **Funcionalidad clave**: Creación, edición y consulta de perfiles de usuarios, gestión de suscripciones.
 
 3. **Microservicio de Gestión de Proyectos**
    - **Descripción**: Administra la creación y actualización de proyectos, donde los clientes pueden describir sus necesidades y recibir presupuestos de profesionales.
-   - **Tecnología**: Implementación en Node.js y Express con almacenamiento en Amazon RDS para datos estructurados de los proyectos, y almacenamiento en AWS S3 para archivos adjuntos como imágenes o documentos.
+   - **Tecnología**: Implementación en Node.js y Express con almacenamiento en PostgreSQL para datos estructurados de los proyectos, y almacenamiento en AWS S3 para archivos adjuntos como imágenes o documentos.
    - **Funcionalidad clave**: Creación, actualización y consulta de proyectos.
 
 4. **Microservicio de Chat y Mensajería**
@@ -328,12 +372,12 @@ Cada microservicio está implementado en **Node.js** utilizando **Express** o **
 
 6. **Microservicio de Pagos Seguros**
    - **Descripción**: Gestiona el flujo de pagos entre clientes y profesionales, incluyendo pagos adelantados y liberación de fondos al finalizar los proyectos.
-   - **Tecnología**: Implementación en Node.js con integración de pasarelas de pago como Stripe o PayPal y almacenamiento en Amazon RDS.
+   - **Tecnología**: Implementación en Node.js con integración de pasarelas de pago como Stripe o PayPal y almacenamiento en PostgreSQL.
    - **Funcionalidad clave**: Procesamiento de pagos, protección de pagos en fideicomiso (escrow) y liberación de fondos.
 
 7. **Microservicio de Valoraciones**
    - **Descripción**: Gestiona las valoraciones que los clientes y profesionales pueden realizar una vez finalizado un proyecto, permitiendo construir una reputación basada en las experiencias.
-   - **Tecnología**: Implementación en Node.js y Express con almacenamiento en Amazon RDS.
+   - **Tecnología**: Implementación en Node.js y Express con almacenamiento en PostgreSQL.
    - **Funcionalidad clave**: Creación y consulta de valoraciones de usuarios.
 
 ---
@@ -352,13 +396,54 @@ Cada microservicio está implementado en **Node.js** utilizando **Express** o **
 
 #### **Bases de Datos**
 
-1. **Amazon RDS (Relational Database Service)**
-   - **Descripción**: Base de datos relacional gestionada, que proporciona un entorno seguro y escalable para almacenar datos estructurados como perfiles de usuario, proyectos, pagos y valoraciones.
-   - **Función**: Almacenar datos estructurados y relacionales de forma eficiente, con soporte para redundancia y recuperación de datos.
+1. **PostgreSQL**
+   - **Descripción**: Sistema de gestión de bases de datos relacional de código abierto, conocido por su robustez, extensibilidad y cumplimiento de estándares SQL. Ofrece características avanzadas como:
+     - Soporte para JSON y JSONB
+     - Tipos de datos geoespaciales (PostGIS)
+     - Índices parciales y expresivos
+     - Particionamiento de tablas
+     - Replicación nativa
+     - Funciones y procedimientos almacenados en múltiples lenguajes
+   - **Función**: Almacenar datos estructurados y relacionales de forma eficiente, proporcionando:
+     - Integridad referencial
+     - Transacciones ACID
+     - Consultas complejas con CTE y window functions
+     - Escalabilidad vertical y horizontal
+     - Alta disponibilidad mediante replicación
+     - Backups incrementales y point-in-time recovery
 
-2. **Amazon DynamoDB**
-   - **Descripción**: Base de datos NoSQL de baja latencia, ideal para manejar grandes volúmenes de datos no estructurados, como el historial de mensajes de chat y el registro de notificaciones.
-   - **Función**: Proporcionar almacenamiento flexible y de alta disponibilidad para datos de mensajería y notificaciones.
+2. **MongoDB**
+   - **Descripción**: MongoDB es una de las bases de datos NoSQL más populares y ampliamente adoptadas. Es una base de datos orientada a documentos que almacena datos en formato JSON o BSON, lo que la hace muy flexible y escalable.
+   - **Ventajas**:
+     - **Integración sencilla con Node.js**: Conectarse a MongoDB usando la biblioteca `mongoose` o `mongodb` es sencillo y ampliamente soportado.
+     - **Flexibilidad de esquemas**: MongoDB no requiere un esquema fijo, lo que es ideal para estructuras de datos cambiantes.
+     - **Fuerte compatibilidad con TypeScript**: Puedes definir modelos y esquemas con soporte de tipado utilizando `mongoose` junto con definiciones de interfaces TypeScript.
+   - **Paquete recomendado**:
+     - `mongoose`: Es un ODM (Object Data Modeling) popular para Node.js y facilita la manipulación de documentos.
+       ```bash
+       npm install mongoose
+       ```
+       Ejemplo básico de uso con `mongoose`:
+       ```typescript
+       import mongoose, { Schema, Document } from 'mongoose';
+
+       interface IUser extends Document {
+         name: string;
+         email: string;
+         password: string;
+       }
+
+       const UserSchema: Schema = new Schema({
+         name: { type: String, required: true },
+         email: { type: String, required: true },
+         password: { type: String, required: true },
+       });
+
+       const UserModel = mongoose.model<IUser>('User', UserSchema);
+
+       // Conexión a la base de datos
+       mongoose.connect('mongodb://localhost:27017/mydb', { useNewUrlParser: true, useUnifiedTopology: true });
+       ```
 
 ---
 

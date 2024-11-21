@@ -1,14 +1,21 @@
 import request from 'supertest';
 import app from '../../app';
 import { testUser } from '../fixtures/users';
-import { prisma } from '../../lib/prisma';
 import { EmailService } from '../../services/email.service';
+import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
+import { AuthenticationError } from '../../utils/errors';
 
-// Mockear el servicio de email
+// Mockear servicios
 jest.mock('../../services/email.service');
+jest.mock('../../services/user.service');
+jest.mock('../../services/auth.service');
 
 const mockedEmailService = EmailService as jest.MockedClass<typeof EmailService>;
+const mockedUserService = UserService as jest.MockedClass<typeof UserService>;
+const mockedAuthService = AuthService as jest.MockedClass<typeof AuthService>;
+
+const password = "Password123";
 
 describe('Rutas de Autenticación', () => {
   let server: any;
@@ -18,25 +25,24 @@ describe('Rutas de Autenticación', () => {
   });
 
   afterAll(async () => {
-    await prisma.$disconnect();
     server.close();
   });
 
   beforeEach(async () => {
-    // Eliminar todos los usuarios antes de cada prueba
-    await prisma.user.deleteMany();
-
     // Resetear los mocks
     jest.clearAllMocks();
-
-    // Limpiar el resetTokensMap
     AuthService.clearResetTokensMap();
+
+    // Configurar comportamiento por defecto del UserService
+    mockedUserService.prototype.findByEmail.mockResolvedValue(null);
+    mockedUserService.prototype.create.mockResolvedValue(testUser);
+    mockedUserService.prototype.findById.mockResolvedValue(testUser);
   });
 
   const registerUser = async (user = testUser) => {
     return await request(app)
       .post('/api/auth/register')
-      .send(user);
+      .send({ ...user, password });
   };
 
   describe('POST /api/auth/register', () => {
@@ -76,11 +82,12 @@ describe('Rutas de Autenticación', () => {
     });
 
     it('debería autenticar a un usuario válido', async () => {
+      mockedUserService.prototype.findByEmail.mockResolvedValue(testUser);
       const response = await request(app)
         .post('/api/auth/login')
         .send({
           email: testUser.email,
-          password: testUser.password
+          password
         });
 
       expect(response.status).toBe(200);
@@ -153,6 +160,7 @@ describe('Rutas de Autenticación', () => {
     });
 
     it('debería iniciar el proceso de recuperación de contraseña', async () => {
+      mockedUserService.prototype.findByEmail.mockResolvedValue(testUser);
       const response = await request(app)
         .post('/api/auth/forgot-password')
         .send({ email: testUser.email });
@@ -162,6 +170,7 @@ describe('Rutas de Autenticación', () => {
     });
 
     it('debería rechazar solicitudes con email no registrado', async () => {
+      mockedUserService.prototype.findByEmail.mockResolvedValue(null);
       const response = await request(app)
         .post('/api/auth/forgot-password')
         .send({ email: 'noexistente@example.com' });
@@ -173,168 +182,67 @@ describe('Rutas de Autenticación', () => {
 
   describe('POST /api/auth/reset-password', () => {
     beforeEach(async () => {
-        await registerUser();
+      await registerUser();
+      mockedUserService.prototype.findByEmail.mockResolvedValue(testUser);
     });
+
     it('debería resetear la contraseña correctamente', async () => {
-      const validUser = await prisma.user.findUnique({ where: { email: testUser.email } });      
-      expect(validUser).not.toBeNull();
-      
-      if (validUser) {
-        // Mockear el método de envío de email para capturar el token
-        let capturedToken: string | null = null;
-        mockedEmailService.prototype.sendPasswordResetEmail.mockImplementation(async (_email, token) => {
-          capturedToken = token;
-        });
+      // Mockear el método de envío de email para capturar el token
+      let capturedToken: string | null = null;
+      mockedEmailService.prototype.sendPasswordResetEmail.mockImplementation(async (_email, token) => {
+        capturedToken = token;
+      });
 
-        // Solicitar restablecimiento de contraseña
-        const responseForgot = await request(app)
-          .post('/api/auth/forgot-password')
-          .send({ email: validUser.email });
+      // Solicitar restablecimiento de contraseña
+      const responseForgot = await request(app)
+        .post('/api/auth/forgot-password')
+        .send({ email: testUser.email });
 
-        expect(responseForgot.status).toBe(200);
-        expect(responseForgot.body).toHaveProperty('message', 'Se ha enviado un email con las instrucciones para recuperar la contraseña');
+      expect(responseForgot.status).toBe(200);
+      expect(responseForgot.body).toHaveProperty('message', 'Se ha enviado un email con las instrucciones para recuperar la contraseña');
 
-        // Asegurar que el email fue enviado y capturar el token
-        expect(mockedEmailService.prototype.sendPasswordResetEmail).toHaveBeenCalled();
-        expect(capturedToken).not.toBeNull();
+      // Asegurar que el email fue enviado y capturar el token
+      expect(mockedEmailService.prototype.sendPasswordResetEmail).toHaveBeenCalled();
+      expect(capturedToken).not.toBeNull();
 
-        if (capturedToken) {
-          // Realizar el restablecimiento de contraseña con el token capturado
-          const responseReset = await request(app)
-            .post('/api/auth/reset-password')
-            .send({
-              token: capturedToken,
-              password: 'nuevaContraseña123'
-            });
+      if (capturedToken) {
+        // Realizar el restablecimiento de contraseña con el token capturado
+        const responseReset = await request(app)
+          .post('/api/auth/reset-password')
+          .send({
+            token: capturedToken,
+            password: 'nuevaContraseña123'
+          });
 
-          expect(responseReset.status).toBe(200);
-          expect(responseReset.body).toHaveProperty('message', 'Contraseña actualizada exitosamente');
-        }
+        expect(responseReset.status).toBe(200);
+        expect(responseReset.body).toHaveProperty('message', 'Contraseña actualizada exitosamente');
       }
     });
 
     it('debería rechazar resetear con token inválido', async () => {
-      const validUser = await prisma.user.findUnique({ where: { email: testUser.email } });        
-      expect(validUser).not.toBeNull();
-
-      if (validUser) {
-        const response = await request(app)
-          .post('/api/auth/reset-password')
-          .send({
+      mockedAuthService.prototype.verifyPasswordResetToken.mockRejectedValue(new AuthenticationError('Token inválido'));
+      const response = await request(app)
+        .post('/api/auth/reset-password')
+        .send({
           token: 'tokenInválido',
           password: 'nuevaContraseña123'
-      });
-
-        expect(response.status).toBe(500);
-        expect(response.body).toHaveProperty('message', 'Error al restablecer la contraseña');
-      }
-    });
-  });
-
-  describe('POST /api/auth/logout', () => {
-    let token: string;
-
-    beforeEach(async () => {
-      const registerResponse = await registerUser();
-      token = registerResponse.body.token;
-    });
-
-    it('debería cerrar la sesión del usuario correctamente', async () => {
-      const response = await request(app)
-        .post('/api/auth/logout')
-        .set('Authorization', `Bearer ${token}`);
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('message', 'Sesión cerrada exitosamente');
-    });
-
-    it('debería rechazar logout sin token', async () => {
-      const response = await request(app)
-        .post('/api/auth/logout');
-
-      expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('message', 'Token no proporcionado');
-    });
-  });
-
-  describe('PUT /api/auth/change-password', () => {
-    let token: string;
-
-    beforeEach(async () => {
-      const registerResponse = await registerUser();
-      token = registerResponse.body.token;
-    });
-
-    it('debería cambiar la contraseña correctamente', async () => {
-      const response = await request(app)
-        .put('/api/auth/change-password')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-          currentPassword: testUser.password,
-          password: 'nuevaContraseña123'
         });
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('message', 'Contraseña actualizada exitosamente');
-    });
-
-    it('debería rechazar cambio de contraseña con contraseña actual incorrecta', async () => {
-      const response = await request(app)
-        .put('/api/auth/change-password')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-          currentPassword: 'contraseñaIncorrecta',
-          password: 'nuevaContraseña123'
-        });
-
-      expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('message', 'Contraseña actual incorrecta');
-    });
-
-    it('debería rechazar cambio de contraseña sin autenticación', async () => {
-      const response = await request(app)
-        .put('/api/auth/change-password')
-        .send({
-          currentPassword: testUser.password,
-          password: 'nuevaContraseña123'
-        });
-
-      expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('message', 'Token no proporcionado');
-    });
-  });
-
-  describe('GET /api/auth/verify-token', () => {
-    let token: string;
-
-    beforeEach(async () => {
-      const registerResponse = await registerUser();
-      token = registerResponse.body.token;
-    });
-
-    it('debería verificar un token válido', async () => {
-      const response = await request(app)
-        .get('/api/auth/verify-token')
-        .set('Authorization', `Bearer ${token}`);
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('valid', true);
-    });
-
-    it('debería rechazar verificación con token inválido', async () => {
-      const response = await request(app)
-        .get('/api/auth/verify-token')
-        .set('Authorization', 'Bearer tokenInválido');
 
       expect(response.status).toBe(403);
       expect(response.body).toHaveProperty('message', 'Token inválido');
     });
 
-    it('debería rechazar verificación sin token', async () => {
+    it('debería rechazar resetear con token expirado', async () => {
+      mockedAuthService.prototype.verifyPasswordResetToken.mockRejectedValue(new AuthenticationError('Token expirado'));
       const response = await request(app)
-        .get('/api/auth/verify-token');
+        .post('/api/auth/reset-password')
+        .send({ 
+          token: 'expired-token', 
+          password: 'nuevaContraseña123' 
+        });
 
-      expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('message', 'Token no proporcionado');
-    });
+      expect(response.status).toBe(403);
+      expect(response.body).toHaveProperty('message', 'Token expirado');
+    }); 
   });
 });
