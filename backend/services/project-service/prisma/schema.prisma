@@ -12,3 +12,50 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum ProjectStatus {
+  open
+  in_progress
+  completed
+  closed
+}
+
+enum QuoteStatus {
+  pending
+  accepted
+  rejected
+}
+
+model Project {
+  project_id        String         @id @default(uuid())
+  client_id         String
+  professional_id   String?        // Nuevo campo para asignar el proyecto a un profesional
+  title             String
+  description       String
+  status            ProjectStatus  @default(open)
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+
+  quotes            Quote[]        @relation("ProjectQuotes")
+  
+  @@index([client_id])
+  @@index([status])
+  @@index([professional_id]) // Índice para optimizar consultas por profesional
+}
+
+model Quote {
+  quote_id          String         @id @default(uuid())
+  project_id        String
+  professional_id   String         // ID del profesional que envía el presupuesto
+  amount            Float
+  message           String?
+  status            QuoteStatus    @default(pending)
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+
+  project           Project        @relation("ProjectQuotes", fields: [project_id], references: [project_id])
+
+  @@index([project_id])
+  @@index([professional_id])
+  @@index([status])
+}

@@ -1,17 +1,36 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import projectRoutes from './routes/projectRoutes';
+import quoteRoutes from './routes/quoteRoutes';
+import errorMiddleware from './middlewares/error.middleware';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
-const prisma = new PrismaClient();
 
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
+// Configurar CORS si es necesario
+app.use(cors());
 
-app.get('/', (req, res) => {
-    res.send('¡Proyecto Project-Service funcionando!');
+// Limitar solicitudes para prevenir ataques de fuerza bruta
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 100, // Limitar a 100 solicitudes por IP
+    message: 'Demasiadas solicitudes desde esta IP, por favor intenta de nuevo más tarde.',
 });
 
-app.listen(PORT, () => {
-    console.log(\Servidor corriendo en el puerto \\);
+app.use(limiter);
+
+// Rutas
+app.use('/projects', projectRoutes);
+app.use('/quotes', quoteRoutes);
+
+// Ruta de prueba
+app.get('/', async (_req, res) => {
+    res.send('Servicio de Proyectos y Presupuestos Activo');
 });
+
+// Middleware de manejo de errores
+app.use(errorMiddleware);
+
+export default app;
