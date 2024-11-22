@@ -23,7 +23,7 @@ export class UserService {
           Authorization: `Bearer ${this.authToken}`
         }
       });
-      return response.data.user;
+      return response.data;
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
         return null;
@@ -39,7 +39,7 @@ export class UserService {
           Authorization: `Bearer ${this.authToken}`
         }
       });
-      return response.data.user;
+      return response.data;
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
         return null;
@@ -55,7 +55,7 @@ export class UserService {
           Authorization: `Bearer ${this.authToken}`
         }
       });
-      return response.data.user;
+      return response.data;
     } catch (error: any) {
       throw new Error('Error al comunicarse con el User Service para crear usuario');
     }
@@ -68,7 +68,7 @@ export class UserService {
           Authorization: `Bearer ${this.authToken}`
         }
       });
-      return response.data.user;
+      return response.data;
     } catch (error: any) {
       throw new Error('Error al comunicarse con el User Service para actualizar usuario');
     }
