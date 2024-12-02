@@ -21,7 +21,6 @@ const Chat: React.FC<ChatProps> = ({ projectId }) => {
     const fetchMessages = async () => {
       try {
         const fetchedMessages = await projectService.getChatMessages(projectId);
-        debugger;
         fetchedMessages.forEach(message => {
           if (message.userId === user?.userId) {
             message.sender = 'LOCAL';

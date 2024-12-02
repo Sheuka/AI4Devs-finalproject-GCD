@@ -45,7 +45,6 @@ const register = async (data: RegisterData) => {
 
 const extractUserFromToken = (token: string): UserData => {
   try {
-    debugger;
     const decoded = jwtDecode<TokenPayload>(token);
     return {
       userId: decoded.userId,
