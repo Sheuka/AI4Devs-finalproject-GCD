@@ -9,6 +9,8 @@ export interface AccessTokenPayload {
 export interface TokenPayload extends AccessTokenPayload {
   userId: string;
   email: string;
+  firstName: string;
+  lastName: string;
   role: UserRole;
 }
 

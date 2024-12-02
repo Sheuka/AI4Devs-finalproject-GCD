@@ -11,15 +11,14 @@ const envSchema = Joi.object({
 
   // JWT
   JWT_SECRET: Joi.string().required(),
-  JWT_EXPIRES_IN: Joi.string().required(),
+  JWT_EXPIRES_IN: Joi.string().default('1h'),
   PASSWORD_RESET_TOKEN_EXPIRATION_HOURS: Joi.number().default(1),
 
-  // SMTP
-  SMTP_HOST: Joi.string().required(),
-  SMTP_PORT: Joi.number().default(587),
-  SMTP_USER: Joi.string().required(),
-  SMTP_PASSWORD: Joi.string().required(),
+  // Email
   SMTP_FROM: Joi.string().email().required(),
+  SENDGRID_API_KEY: Joi.string().required(),
+  
+  // App
   APP_NAME: Joi.string().required(),
   CLIENT_URL: Joi.string().uri().required(),
 
@@ -45,11 +44,10 @@ export const config = {
   PASSWORD_RESET_TOKEN_EXPIRATION_HOURS: envVars.PASSWORD_RESET_TOKEN_EXPIRATION_HOURS,
 
   // SMTP
-  SMTP_HOST: envVars.SMTP_HOST,
-  SMTP_PORT: envVars.SMTP_PORT,
-  SMTP_USER: envVars.SMTP_USER,
-  SMTP_PASSWORD: envVars.SMTP_PASSWORD,
   SMTP_FROM: envVars.SMTP_FROM,
+  SENDGRID_API_KEY: envVars.SENDGRID_API_KEY,
+
+  // App
   APP_NAME: envVars.APP_NAME,
   CLIENT_URL: envVars.CLIENT_URL,
 

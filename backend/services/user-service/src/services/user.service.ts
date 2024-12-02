@@ -1,13 +1,16 @@
 import { PrismaClient, User } from '@prisma/client';
-import { UpdateUserDTO, CreateUserDTO } from '../models/user.model';
+import { UpdateUserDTO, CreateUserDTO, UserWithRating } from '../models/user.model';
 import { DatabaseError } from '../utils/errors';
-import { getPrismaClient } from '../config/dependencies';
+import { getPrismaClient, getRatingService } from '../config/dependencies';
+import { RatingService } from './ratingService';
 
 export class UserService {
   private prisma: PrismaClient;
+  private ratingService: RatingService;
 
   constructor() {
     this.prisma = getPrismaClient();
+    this.ratingService = getRatingService();
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -20,11 +23,16 @@ export class UserService {
     }
   }
 
-  async findById(id: string): Promise<User | null> {
+  async findById(id: string): Promise<UserWithRating | null> {
     try {
-      return await this.prisma.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: { id }
       });
+      if (user) {
+        const rating = await this.ratingService.getAverageRating(id);
+        return { ...user, rating };
+      }
+      return null;
     } catch (error) {
       throw new DatabaseError('Error al buscar usuario por ID');
     }

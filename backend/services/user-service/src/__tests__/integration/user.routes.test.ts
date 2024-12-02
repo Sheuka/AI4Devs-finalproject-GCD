@@ -141,6 +141,31 @@ describe('User Routes', () => {
       expect(response.status).toBe(400);
       expect(response.body.message).toBe('El correo electrónico ya está registrado');
     });
+
+    it('debería registrar un nuevo usuario con provincia y localidad', async () => {
+      const userToCreate = { 
+        ...testCreateUser,
+        province: 'Provincia Test',
+        locality: 'Localidad Test'
+      };
+      (prismaClient.user.findUnique as jest.Mock).mockResolvedValue(null);
+      (prismaClient.user.create as jest.Mock).mockResolvedValue(responseUser);
+      const token = generateTestToken(responseUser.id);
+
+      const response = await request(app)
+        .post('/api/users/register')
+        .set('Authorization', `Bearer ${token}`)
+        .send(userToCreate);
+
+      expect(response.status).toBe(201);
+      expect(response.body.user).toEqual(expect.objectContaining({
+        email: responseUser.email,
+        firstName: responseUser.firstName,
+        lastName: responseUser.lastName,
+        province: 'Provincia Test',
+        locality: 'Localidad Test'
+      }));
+    });
   });
 
   describe('GET /api/users/email/:email', () => {

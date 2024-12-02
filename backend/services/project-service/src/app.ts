@@ -1,6 +1,7 @@
 import express from 'express';
 import projectRoutes from './routes/projectRoutes';
 import quoteRoutes from './routes/quoteRoutes';
+import assistantRoutes from './routes/assistantRoutes';
 import errorMiddleware from './middlewares/error.middleware';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
@@ -22,8 +23,9 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Rutas
-app.use('/projects', projectRoutes);
-app.use('/quotes', quoteRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/quotes', quoteRoutes);
+app.use('/api/assistant', assistantRoutes);
 
 // Ruta de prueba
 app.get('/', async (_req, res) => {

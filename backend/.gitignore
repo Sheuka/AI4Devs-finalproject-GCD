@@ -1,16 +1,13 @@
 # Directorios de dependencias
 node_modules/
-backend/services/auth-service/node_modules/
+*/node_modules/
+
 
 # Archivos de configuración de VSCode
 .vscode/
 
 # Archivos de entorno
 .env
-.env.local
-.env.development
-.env.test
-.env.production
 
 # Archivos de log
 logs/

@@ -11,6 +11,8 @@ export const testCreateUser: CreateUserDTO = {
     role: UserRole.CLIENT,    
     phoneNumber: null,
     profilePicture: null,
+    province: 'Provincia Ejemplo' || null,
+    locality: 'Localidad Ejemplo' || null,
   };
 
 export const testUpdateUser: UpdateUserDTO = {
@@ -20,6 +22,8 @@ export const testUpdateUser: UpdateUserDTO = {
     phoneNumber: null,
     profilePicture: null,
     isActive: true,
+    province: 'Nueva Provincia' || null,
+    locality: 'Nueva Localidad' || null,
   };
   
 export const responseUser: User = {
@@ -28,4 +32,7 @@ export const responseUser: User = {
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
+    speciality: null,
+    province: testCreateUser.province || null,
+    locality: testCreateUser.locality || null,
 };

@@ -32,7 +32,7 @@ export class UserController {
         password: hashedPassword
       });
 
-      res.status(201).json({ user });
+      res.status(201).json({ ...user });
     } catch (error) {
       console.error('Error en registro:', error);
       res.status(500).json({
@@ -68,7 +68,7 @@ export class UserController {
         res.status(404).json({ message: 'Usuario no encontrado' });
         return;
       }
-      res.json({ user });
+      res.json({ ...user });
     } catch (error) {
       console.error('Error al obtener usuario por email:', error);
       res.status(500).json({
@@ -88,7 +88,7 @@ export class UserController {
         res.status(404).json({ message: 'Usuario no encontrado' });
         return;
       }
-      res.json({ user: updatedUser });
+      res.json({ ...updatedUser });
     } catch (error) {
       console.error('Error al actualizar usuario:', error);
       res.status(500).json({

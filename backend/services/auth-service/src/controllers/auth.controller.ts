@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth.service';
 import { EmailService } from '../services/email.service';
 import { AuthenticationError } from '../utils/errors';
 import { TokenPayload } from '../types/auth.types';
+import { clientService } from '../services/client.service';
 
 // Instanciar servicios
 const userService = new UserService();
@@ -79,6 +80,8 @@ export const login = async (req: Request, res: Response) => {
     // Generar token
     const tokenPayload: TokenPayload = {
       userId: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       role: user.role,
       clientId: config.APP_NAME,
@@ -143,7 +146,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
     // Generar token de recuperación
     const resetToken = await authService.generatePasswordResetToken(user.id);
 
-    // Aquí deberías enviar el email con el token
+    // Enviar el email con el token
     await emailService.sendPasswordResetEmail(email, resetToken);
 
     return res.json({
@@ -183,6 +186,29 @@ export const resetPassword = async (req: Request, res: Response) => {
         message: 'Error al restablecer la contraseña'
       });
     }
+  }
+};
+
+export const getAccessToken = async (req: Request, res: Response) => {
+  try {
+    const { clientId, secret } = req.body;
+
+    if (!clientId || !secret) {
+      return res.status(400).json({ message: 'clientId y secret son requeridos' });
+    }
+
+    const isValid = await clientService.validateClient(clientId, secret);
+
+    if (!isValid) {
+      return res.status(401).json({ message: 'Credenciales de cliente inválidas' });
+    }
+
+    const token = clientService.generateAccessToken(clientId);
+
+    return res.status(200).json({ token });
+  } catch (error) {
+    console.error('Error al generar token de acceso:', error);
+    return res.status(500).json({ message: 'Error al generar el token de acceso' });
   }
 };
 

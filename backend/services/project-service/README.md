@@ -83,4 +83,125 @@ Servicio backend para la gestión de proyectos y presupuestos en la plataforma C
 - `GET /quotes/project/:projectId`: Listar presupuestos por proyecto
 - `GET /quotes/professional`: Listar presupuestos por profesional
 
+#### Notas Adicionales
+
+- **Envío de Correos al Cliente:**
+  - Cuando un profesional crea un presupuesto (`POST /quotes`), el cliente asociado al proyecto recibirá un correo notificando la creación del presupuesto.
+  - Cuando un profesional actualiza un presupuesto (`PUT /quotes/:id`), el cliente asociado recibirá un correo notificando la actualización del presupuesto.
+
+- **Envío de Correos al Profesional:**
+  - Cuando el cliente acepta un presupuesto (`PUT /projects/:id/quotes/:quoteId` con acción `accept`), el profesional recibirá un correo notificando la aceptación de su presupuesto.
+  - Cuando el cliente rechaza un presupuesto (`PUT /projects/:id/quotes/:quoteId` con acción `reject`), el profesional recibirá un correo notificando el rechazo de su presupuesto.
+
+### Proyectos para Profesionales
+
+- `GET /api/projects/expert`: Obtener proyectos para profesionales.
+
+  **Descripción:**
+  
+  - Devuelve todos los proyectos en estado `open`.
+  - Devuelve los proyectos en estados `in_progress` o `completed` en los que el profesional está asignado.
+  - Si el proyecto tiene un presupuesto del profesional, este se incluye en la respuesta.
+
+  **Respuesta:**
+    ```json
+  [
+    {
+      "projectId": "uuid",
+      "clientId": "uuid",
+      "professionalId": "uuid",
+      "title": "Título del Proyecto",
+      "description": "Descripción del proyecto",
+      "type": "Tipo",
+      "amount": 1000,
+      "budget": 1200,
+      "startDate": "2023-11-30",
+      "status": "open",
+      "createdAt": "2023-11-21T17:23:23.000Z",
+      "updatedAt": "2023-11-21T17:23:23.000Z",
+      "quote": {
+        "quoteId": "uuid",
+        "projectId": "uuid",
+        "professionalId": "uuid",
+        "amount": 1100,
+        "message": "Mensaje del presupuesto",
+        "status": "pending",
+        "createdAt": "2023-11-21T17:23:23.000Z",
+        "updatedAt": "2023-11-21T17:23:23.000Z"
+      }
+    }
+    // ... otros proyectos
+  ]  ```
+
+### Chat de Proyecto
+
+- `GET /projects/:id/chat`: Obtener mensajes de chat asociados a un proyecto.
+
+  **Descripción:**
+  
+  - Devuelve una lista de mensajes de chat relacionados con el proyecto especificado.
+  - Permitido para `CLIENT`, `PROFESSIONAL` y `ADMIN`.
+
+  **Parámetros:**
+  
+  - `id` (path): ID del proyecto.
+
+  **Respuesta:**
+
+  ```json
+  [
+    {
+      "id": "uuid",
+      "projectId": "uuid",
+      "userId": "uuid",
+      "content": "Mensaje de chat",
+      "timestamp": "2023-11-21T17:23:23.000Z"
+    }
+    // ... otros mensajes
+  ]
+  ```
+
+  **Errores Comunes:**
+  
+  - `400 Bad Request`: ID del proyecto no proporcionado o inválido.
+  - `401 Unauthorized`: Usuario no autenticado.
+  - `403 Forbidden`: Usuario no tiene permisos para acceder al chat del proyecto.
+  - `404 Not Found`: Proyecto no encontrado.
+  - `500 Internal Server Error`: Error interno del servidor.
+
+- `POST /projects/:id/chat`: Enviar un mensaje a un proyecto.
+
+**Descripción:**
+
+- Permite enviar un mensaje al chat de un proyecto.
+- Permitido para `CLIENT`, `PROFESSIONAL` y `ADMIN`.
+
+**Parámetros:**
+
+- `id` (path): ID del proyecto.
+
+**Cuerpo de la Solicitud:**
+
+- `content` (body): Contenido del mensaje.
+
+**Respuesta:**
+
+```json
+{
+  "id": "uuid",
+  "projectId": "uuid",
+  "userId": "uuid",
+  "content": "Mensaje de chat",
+  "timestamp": "2023-11-21T17:23:23.000Z"
+}
+```
+
+**Errores Comunes:**
+
+- `400 Bad Request`: ID del proyecto no proporcionado o inválido.
+- `401 Unauthorized`: Usuario no autenticado.
+- `403 Forbidden`: Usuario no tiene permisos para enviar mensajes al chat del proyecto.
+- `404 Not Found`: Proyecto no encontrado.
+- `500 Internal Server Error`: Error interno del servidor.
+
 ## Estructura del Proyecto

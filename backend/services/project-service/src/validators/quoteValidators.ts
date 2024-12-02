@@ -2,7 +2,6 @@ import { body, param } from 'express-validator';
 
 export const createQuoteValidator = [
     body('projectId').isString().notEmpty().withMessage('Project ID es obligatorio'),
-    body('professionalId').isString().notEmpty().withMessage('Professional ID es obligatorio'),
     body('amount').isFloat({ gt: 0 }).withMessage('Amount debe ser un número mayor que 0'),
     body('message').optional().isString().withMessage('Message debe ser una cadena de texto'),
 ];

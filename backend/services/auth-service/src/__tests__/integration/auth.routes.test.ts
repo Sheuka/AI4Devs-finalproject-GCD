@@ -10,6 +10,16 @@ import { AuthenticationError } from '../../utils/errors';
 jest.mock('../../services/email.service');
 jest.mock('../../services/user.service');
 jest.mock('../../services/auth.service');
+jest.mock('../../config/clients', () => [
+  {
+    clientId: 'cliente1',
+    secret: '$2a$10$XyZ...hashed_secret1',
+  },
+  {
+    clientId: 'cliente2',
+    secret: '$2a$10$AbC...hashed_secret2',
+  },
+]);
 
 const mockedEmailService = EmailService as jest.MockedClass<typeof EmailService>;
 const mockedUserService = UserService as jest.MockedClass<typeof UserService>;
@@ -244,5 +254,43 @@ describe('Rutas de Autenticación', () => {
       expect(response.status).toBe(403);
       expect(response.body).toHaveProperty('message', 'Token expirado');
     }); 
+  });
+
+  describe('POST /api/auth/token', () => {
+    it('debería generar un token válido con credenciales correctas', async () => {
+      const response = await request(app)
+        .post('/api/auth/token')
+        .send({
+          clientId: 'cliente1',
+          secret: 'secretoCliente1',
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('token');
+    });
+
+    it('debería rechazar con credenciales inválidas', async () => {
+      const response = await request(app)
+        .post('/api/auth/token')
+        .send({
+          clientId: 'invalid-client-id',
+          secret: 'invalid-secret',
+        });
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty('message', 'Credenciales de cliente inválidas');
+    });
+
+    it('debería rechazar solicitudes con campos faltantes', async () => {
+      const response = await request(app)
+        .post('/api/auth/token')
+        .send({
+          clientId: 'cliente1',
+          // Falta 'secret'
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('errors');
+    });
   });
 });
