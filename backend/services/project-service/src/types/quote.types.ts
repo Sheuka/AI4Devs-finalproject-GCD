@@ -5,11 +5,13 @@ export interface QuoteCreateDTO {
   professionalId: string;
   amount: number;
   message?: string;
+  estimatedDuration?: string;
 }
 
 export interface QuoteUpdateDTO {
   amount?: number;
   message?: string;
+  estimatedDuration?: string;
 }
 
 export interface QuoteResponseDTO {
@@ -18,6 +20,7 @@ export interface QuoteResponseDTO {
   professionalId: string;
   amount: number;
   message?: string;
+  estimatedDuration?: string;
   status: QuoteStatus;
   createdAt: Date;
   updatedAt: Date;

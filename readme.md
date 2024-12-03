@@ -15,7 +15,10 @@
 
 ### **0.1. Tu nombre completo:**
 
+*[Tu Nombre Completo]*
+
 ### **0.2. Nombre del proyecto:**
+
 ChapuExpress
 
 ### **0.3. Descripción breve del proyecto:**
@@ -24,12 +27,11 @@ Esta plataforma conecta a clientes con profesionales de la industria del bricola
 
 ### **0.4. URL del proyecto:**
 
-> Puede ser pública o privada, en cuyo caso deberás compartir los accesos de manera segura. Puedes enviarlos a [alvaro@lidr.co](mailto:alvaro@lidr.co) usando algún servicio como [onetimesecret](https://onetimesecret.com/).
+>[Proporciona la URL del proyecto aquí. Puede ser pública o privada. Si es privada, comparte los accesos de manera segura con [alvaro@lidr.co](mailto:alvaro@lidr.co) usando servicios como [onetimesecret](https://onetimesecret.com/).]
 
-### 0.5. URL o archivo comprimido del repositorio
+### **0.5. URL o archivo comprimido del repositorio**
 
-> Puedes tenerlo alojado en público o en privado, en cuyo caso deberás compartir los accesos de manera segura. Puedes enviarlos a [alvaro@lidr.co](mailto:alvaro@lidr.co) usando algún servicio como [onetimesecret](https://onetimesecret.com/). También puedes compartir por correo un archivo zip con el contenido
-
+>[Proporciona la URL del repositorio o un archivo comprimido del mismo. Si es privado, comparte los accesos de manera segura con [alvaro@lidr.co](mailto:alvaro@lidr.co) usando servicios como [onetimesecret](https://onetimesecret.com/), o envía un archivo zip por correo.]
 
 ---
 
@@ -47,19 +49,11 @@ Además, se incluyen funciones avanzadas como seguimiento de proyecto, valoraci�
 
 ### **1.2. Características y funcionalidades principales:**
 
-Aquí tienes una propuesta detallada para el punto 1.2:
-
----
-
-### 1.2 Características y funcionalidades principales
-
-La plataforma ofrece una variedad de características que facilitan la interacción entre clientes y profesionales en el sector del bricolaje y la construcción. Estas funcionalidades se agrupan en categorías para mejorar la claridad:
-
 #### Funcionalidades de la Plataforma
 
-- **Registro y autenticación**: Proceso sencillo para que clientes y profesionales creen y verifiquen sus cuentas.
+- **Registro y autenticación**: Proceso sencillo para que clientes y profesionales creen y verifiquen sus cuentas utilizando JWT para la gestión de autenticación.
 - **Solicitud de presupuesto**: Los clientes pueden describir su proyecto, y la plataforma presenta estas solicitudes a profesionales relevantes para que envíen sus presupuestos.
-- **Sistema de mensajería y notificaciones**: Comunicación segura entre clientes y profesionales, con notificaciones automáticas para actualizaciones clave (presupuestos recibidos, respuestas de profesionales, etc.).
+- **Sistema de mensajería y notificaciones**: Comunicación segura entre clientes y profesionales, con notificaciones automáticas para actualizaciones clave como presupuestos recibidos y respuestas de profesionales.
 - **Valoraciones y opiniones**: Al finalizar un proyecto, tanto el cliente como el profesional pueden dejar una valoración y comentario sobre su experiencia, ayudando a construir confianza.
 - **Protección de pagos**: Sistema de pagos seguro en el que el cliente paga por adelantado, pero los fondos se liberan al profesional solo al completar el proyecto.
 - **Soporte de proyecto y seguimiento**: Opcionalmente, el profesional puede actualizar el estado del proyecto y compartir fotos del progreso, permitiendo al cliente seguir el desarrollo del trabajo.
@@ -83,11 +77,7 @@ La plataforma ofrece una variedad de características que facilitan la interacci
 - **Actualización de estado del proyecto**: Pueden mantener al cliente informado del avance del proyecto, proporcionando actualizaciones periódicas con fotos y comentarios.
 - **Valoración de clientes**: Los profesionales pueden valorar a los clientes al final del proyecto, lo cual ayuda a otros profesionales a evaluar la confiabilidad de los clientes.
 
----
-
 #### Funcionalidades Mínimas para el MVP
-
-Para el desarrollo inicial de un Producto Mínimo Viable (MVP), se propone incluir las siguientes funcionalidades esenciales:
 
 1. **Registro y autenticación** para clientes y profesionales.
 2. **Creación de solicitud de presupuesto** donde el cliente puede describir su proyecto.
@@ -104,6 +94,7 @@ Estas funcionalidades proporcionan el núcleo esencial para una experiencia func
 > Proporciona imágenes y/o videotutorial mostrando la experiencia del usuario desde que aterriza en la aplicación, pasando por todas las funcionalidades principales.
 
 ### **1.4. Instrucciones de instalación:**
+
 > Documenta de manera precisa las instrucciones para instalar y poner en marcha el proyecto en local (librerías, backend, frontend, servidor, base de datos, migraciones y semillas de datos, etc.)
 
 ---
@@ -114,38 +105,43 @@ Estas funcionalidades proporcionan el núcleo esencial para una experiencia func
 
 #### Diagrama Principal de Arquitectura
 
+La arquitectura de ChapuExpress está basada en microservicios desplegados en AWS, asegurando escalabilidad, mantenibilidad y resiliencia. A continuación se detalla cada componente clave:
+
+![Diagrama de Arquitectura](ruta/al/diagrama.png)
+
 #### 1. **Frontend**
-- **React Client**: Es la interfaz de usuario desarrollada con React. Es responsable de interactuar con el usuario final, manejando la presentación y la lógica de la interfaz.
+- **React Client**: Es la interfaz de usuario desarrollada con React.js. Responsable de interactuar con el usuario final, manejando la presentación y la lógica de la interfaz.
 
 #### 2. **API Gateway**
 - **AWS API Gateway**: Actúa como el punto de entrada principal para todas las solicitudes que provienen del cliente React. Gestiona el enrutamiento de las solicitudes a los microservicios adecuados en el backend, asegurando la seguridad, el control de tráfico y la gestión de APIs.
 
 #### 3. **Backend Microservices**
-El backend está compuesto por múltiples microservicios, cada uno responsable de una funcionalidad específica:
-- **AuthService (Autenticación)**: Maneja la autenticación de usuarios, asegurando que solo usuarios autorizados puedan acceder a ciertos recursos.
+
+Cada microservicio está implementado en **Node.js** utilizando **Express** y **TypeScript**, siguiendo los principios SOLID y DRY para una arquitectura robusta y mantenible. Los microservicios principales incluyen:
+
+- **AuthService (Autenticación)**: Maneja la autenticación de usuarios, utilizando JWT para la gestión de tokens y control de acceso.
 - **UserService (Gestión de Usuarios)**: Administra la información de los usuarios, incluyendo el registro, actualización y gestión de perfiles.
 - **ProjectService (Gestión de Proyectos)**: Se encarga de la creación, actualización y gestión de proyectos dentro de la aplicación.
-- **ChatService (Chat y Mensajería)**: Facilita la comunicación en tiempo real entre los usuarios mediante funcionalidades de chat y mensajería.
-- **NotificationService (Notificaciones)**: Gestiona el envío de notificaciones a los usuarios, tanto en tiempo real como por otros medios.
-- **PaymentService (Pagos Seguros)**: Maneja las transacciones financieras, asegurando que los pagos sean seguros y confiables.
+- **ChatService (Chat y Mensajería)**: Facilita la comunicación en tiempo real entre los usuarios mediante funcionalidades de chat y mensajería, utilizando Amazon SQS y DynamoDB para manejo eficiente de mensajes.
+- **NotificationService (Notificaciones)**: Gestiona el envío de notificaciones a los usuarios, tanto en tiempo real como por otros medios, utilizando Amazon SNS.
+- **PaymentService (Pagos Seguros)**: Maneja las transacciones financieras, integrándose con pasarelas de pago como Stripe o PayPal para asegurar transacciones seguras.
 - **RatingService (Valoraciones)**: Permite a los usuarios calificar y valorar diferentes aspectos de la aplicación o servicios ofrecidos.
 
 #### 4. **Base de Datos**
-- **Amazon RDS**: Base de datos relacional utilizada por varios microservicios para almacenar datos estructurados como usuarios, proyectos, pagos, etc.
-- **DynamoDB**: Base de datos NoSQL utilizada por servicios que requieren alta escalabilidad y rendimiento, como el ChatService y NotificationService.
+- **Amazon RDS (PostgreSQL)**: Utilizado por varios microservicios para almacenar datos estructurados como usuarios, proyectos, pagos, etc.
+- **Amazon DynamoDB**: Utilizado por servicios que requieren alta escalabilidad y rendimiento, como el ChatService y NotificationService.
 
 #### 5. **Almacenamiento en la Nube**
 - **AWS S3**: Servicio de almacenamiento utilizado por el ProjectService para almacenar y gestionar archivos relacionados con proyectos, como documentos, imágenes, etc.
 
 #### 6. **Sistema de Eventos**
-- **SQS (Cola de Mensajes)**: Utilizada por el ChatService para manejar la comunicación asíncrona y la gestión de mensajes, garantizando que los mensajes se procesen de manera eficiente.
-- **SNS Chat Topic**: Tópico de notificaciones específico para el chat, permitiendo el envío de actualizaciones en tiempo real a los usuarios involucrados en conversaciones.
-- **SNS Notification Topic**: Tópico general para notificaciones, utilizado por el NotificationService para enviar diversas notificaciones a los usuarios.
+- **Amazon SQS (Simple Queue Service)**: Utilizada por el ChatService para manejar la comunicación asíncrona y la gestión de mensajes, garantizando que los mensajes se procesen de manera eficiente.
+- **Amazon SNS (Simple Notification Service)**: Utilizado por NotificationService para distribuir notificaciones a múltiples suscriptores, tanto para chat como para otras alertas relevantes.
 
 #### 7. **Interacciones Entre Componentes**
 - El **React Client** se comunica con el **API Gateway**, que luego enruta las solicitudes a los microservicios correspondientes.
 - Los microservicios **AuthService**, **UserService**, **ProjectService**, **PaymentService** y **RatingService** interactúan con **Amazon RDS** para operaciones de lectura y escritura de datos.
-- **ChatService** y **NotificationService** utilizan **DynamoDB** para manejar datos que requieren alta disponibilidad y rendimiento.
+- **ChatService** y **NotificationService** utilizan **Amazon DynamoDB** para manejar datos que requieren alta disponibilidad y rendimiento.
 - **ProjectService** utiliza **AWS S3** para almacenar archivos relacionados con los proyectos.
 - **ChatService** envía mensajes a **SQSQueue** para procesamiento asíncrono, mientras que **NotificationService** publica notificaciones en los tópicos **SNSChatTopic** y **SNSNotificationTopic** para informar a los usuarios en tiempo real.
 
@@ -325,29 +321,23 @@ flowchart TD
 
 La plataforma se compone de varios servicios y tecnologías que trabajan juntos para proporcionar una experiencia fluida y segura para clientes y profesionales. Los componentes principales se dividen en frontend, backend, bases de datos, sistema de eventos, y almacenamiento en la nube. A continuación, se detalla cada uno de ellos.
 
----
-
 #### **Frontend**
 
 - **React Client**: La interfaz de usuario se implementará en React.js, una biblioteca de JavaScript popular por su eficiencia y capacidad para crear aplicaciones de una sola página (SPA) rápidas y reactivas. React permite la creación de una experiencia de usuario intuitiva, ideal para usuarios sin conocimientos técnicos.
   - **Despliegue en AWS Amplify**: AWS Amplify simplifica el despliegue de aplicaciones frontend y permite integraciones fáciles con servicios backend. Amplify proporciona integración continua (CI/CD), despliegue seguro y autenticación nativa con AWS Cognito.
-
----
 
 #### **API Gateway**
 
 - **AWS API Gateway**: Este componente actúa como una puerta de enlace para todas las solicitudes del frontend hacia los microservicios del backend. API Gateway maneja la autenticación, la limitación de tasas (rate limiting), y la enrutación de peticiones hacia los microservicios correctos. API Gateway permite añadir lógica de autorización, autenticación y monitoreo a nivel de API.
   - **Ventajas**: API Gateway facilita la implementación de API RESTful y la escalabilidad de los microservicios al distribuir el tráfico según sea necesario.
 
----
-
 #### **Backend Microservicios**
 
-Cada microservicio está implementado en **Node.js** utilizando **Express**. Node.js es conocido por su alta capacidad de manejo de solicitudes en tiempo real, ideal para aplicaciones con componentes de mensajería y notificaciones.
+Cada microservicio está implementado en **Node.js** utilizando **Express** y **TypeScript**. Node.js es conocido por su alta capacidad de manejo de solicitudes en tiempo real, ideal para aplicaciones con componentes de mensajería y notificaciones.
 
 1. **Microservicio de Autenticación**
    - **Descripción**: Gestiona la autenticación de usuarios y la autorización de roles. Este servicio verifica las credenciales de los usuarios y maneja la creación de tokens de autenticación.
-   - **Tecnología**: Implementación en Node.js utilizando la librería jsonwebtoken para la gestión de autenticación y autorización, y usa el microservicio de gestión de usuarios para almacenar los datos de los usuarios.
+   - **Tecnología**: Implementación en Node.js utilizando la librería `jsonwebtoken` para la gestión de autenticación y autorización, y usa el microservicio de gestión de usuarios para almacenar los datos de los usuarios.
    - **Funcionalidad clave**: Login, registro, y recuperación de contraseñas.
 
 2. **Microservicio de Gestión de Usuarios**
@@ -364,7 +354,7 @@ Cada microservicio está implementado en **Node.js** utilizando **Express**. Nod
    - **Descripción**: Facilita la comunicación en tiempo real entre clientes y profesionales a través de mensajes de chat. Utiliza una arquitectura basada en eventos para mejorar la escalabilidad y eficiencia del servicio.
    - **Tecnología**: Implementación en Node.js y Express con Amazon SQS para la cola de mensajes y DynamoDB para almacenar los historiales de chat.
    - **Funcionalidad clave**: Envío y recepción de mensajes, almacenamiento de historial de chat, notificaciones de nuevos mensajes a través de SNS.
-   
+
 5. **Microservicio de Notificaciones**
    - **Descripción**: Gestiona las notificaciones de la plataforma, incluyendo alertas de nuevos proyectos y presupuestos. Utiliza Amazon SNS para distribuir notificaciones a múltiples suscriptores.
    - **Tecnología**: Implementación en Node.js y Express con Amazon SNS para la entrega de notificaciones en tiempo real y DynamoDB para el registro de notificaciones enviadas.
@@ -380,8 +370,6 @@ Cada microservicio está implementado en **Node.js** utilizando **Express**. Nod
    - **Tecnología**: Implementación en Node.js y Express con almacenamiento en PostgreSQL.
    - **Funcionalidad clave**: Creación y consulta de valoraciones de usuarios.
 
----
-
 #### **Sistema de Eventos**
 
 1. **Amazon SQS (Simple Queue Service)**
@@ -390,71 +378,36 @@ Cada microservicio está implementado en **Node.js** utilizando **Express**. Nod
 
 2. **Amazon SNS (Simple Notification Service)**
    - **Descripción**: SNS permite la publicación de eventos y su distribución a múltiples suscriptores. Se utiliza para enviar notificaciones en tiempo real tanto para el chat como para alertas de nuevos proyectos y presupuestos.
-   - **Función**: Facilitar el envío de notificaciones en tiempo real a los usuarios relevantes (clientes y profesionales) sin cargar el sistema de microservicios.
-
----
+   - **Función**: Facilitar el envío de notificaciones en tiempo real a los usuarios relevantes (clientes y profesionales) sin sobrecargar el sistema de microservicios.
 
 #### **Bases de Datos**
 
 1. **PostgreSQL**
-   - **Descripción**: Sistema de gestión de bases de datos relacional de código abierto, conocido por su robustez, extensibilidad y cumplimiento de estándares SQL. Ofrece características avanzadas como:
-     - Soporte para JSON y JSONB
-     - Tipos de datos geoespaciales (PostGIS)
-     - Índices parciales y expresivos
-     - Particionamiento de tablas
-     - Replicación nativa
-     - Funciones y procedimientos almacenados en múltiples lenguajes
-   - **Función**: Almacenar datos estructurados y relacionales de forma eficiente, proporcionando:
-     - Integridad referencial
-     - Transacciones ACID
-     - Consultas complejas con CTE y window functions
-     - Escalabilidad vertical y horizontal
-     - Alta disponibilidad mediante replicación
-     - Backups incrementales y point-in-time recovery
+   - **Descripción**: Sistema de gestión de bases de datos relacional de código abierto, conocido por su robustez, extensibilidad y cumplimiento de estándares SQL.
+   - **Función**: Almacenar datos estructurados y relacionales de forma eficiente, proporcionando integridad referencial, transacciones ACID, y consultas complejas.
 
 2. **MongoDB**
-   - **Descripción**: MongoDB es una de las bases de datos NoSQL más populares y ampliamente adoptadas. Es una base de datos orientada a documentos que almacena datos en formato JSON o BSON, lo que la hace muy flexible y escalable.
+   - **Descripción**: Base de datos NoSQL orientada a documentos que almacena datos en formato JSON o BSON, ideal para estructuras de datos cambiantes.
    - **Ventajas**:
-     - **Integración sencilla con Node.js**: Conectarse a MongoDB usando la biblioteca `mongoose` o `mongodb` es sencillo y ampliamente soportado.
-     - **Flexibilidad de esquemas**: MongoDB no requiere un esquema fijo, lo que es ideal para estructuras de datos cambiantes.
-     - **Fuerte compatibilidad con TypeScript**: Puedes definir modelos y esquemas con soporte de tipado utilizando `mongoose` junto con definiciones de interfaces TypeScript.
-   - **Paquete recomendado**:
-     - `mongoose`: Es un ODM (Object Data Modeling) popular para Node.js y facilita la manipulación de documentos.
-       ```bash
-       npm install mongoose
-       ```
-       Ejemplo básico de uso con `mongoose`:
-       ```typescript
-       import mongoose, { Schema, Document } from 'mongoose';
-
-       interface IUser extends Document {
-         name: string;
-         email: string;
-         password: string;
-       }
-
-       const UserSchema: Schema = new Schema({
-         name: { type: String, required: true },
-         email: { type: String, required: true },
-         password: { type: String, required: true },
-       });
-
-       const UserModel = mongoose.model<IUser>('User', UserSchema);
-
-       // Conexión a la base de datos
-       mongoose.connect('mongodb://localhost:27017/mydb', { useNewUrlParser: true, useUnifiedTopology: true });
-       ```
-
----
+     - **Integración sencilla con Node.js**: Uso de `mongoose` facilita la manipulación de documentos.
+     - **Flexibilidad de esquemas**: No requiere un esquema fijo, ideal para datos dinámicos.
+     - **Compatibilidad con TypeScript**: Soporte de tipado mediante `mongoose` y definiciones de interfaces.
 
 #### **Almacenamiento en la Nube**
 
-- **Amazon S3 (Simple Storage Service)**: Utilizado para almacenar archivos de proyectos, imágenes y documentos adjuntos. S3 es una opción económica y escalable para el almacenamiento de archivos, con una alta disponibilidad y redundancia. Puede integrarse con CloudFront para servir archivos estáticos de manera eficiente.
+- **Amazon S3 (Simple Storage Service)**: Utilizado para almacenar archivos de proyectos, imágenes y documentos adjuntos. S3 es una opción económica y escalable para el almacenamiento de archivos, con alta disponibilidad y redundancia. Puede integrarse con CloudFront para servir archivos estáticos de manera eficiente.
   - **Función**: Almacenar archivos estáticos y multimedia de manera segura y escalable.
 
----
+#### **Interacciones y Despliegue**
 
-Cada uno de estos componentes proporciona una función específica en la arquitectura de microservicios, permitiendo una plataforma modular, escalable y de alto rendimiento. La integración de estos servicios en AWS ofrece ventajas en cuanto a escalabilidad, rendimiento, y reducción de costes iniciales, permitiendo que el sistema se adapte a la demanda conforme la plataforma crece.
+1. **Despliegue en AWS**
+   - **ECS (Elastic Container Service)**: Despliega los microservicios en contenedores gestionados, facilitando la escalabilidad y el mantenimiento.
+   - **CloudFront CDN**: Distribuye contenido estático de manera eficiente a nivel global.
+   - **Amplify**: Despliega el frontend en React.js, integrándose fácilmente con backend y servicios de autenticación.
+
+2. **Comunicación entre Servicios**
+   - Los microservicios se comunican a través del API Gateway, utilizando JWT para autenticación y autorización.
+   - Los sistemas de mensajería y notificaciones utilizan SQS y SNS para manejar comunicaciones asíncronas y en tiempo real.
 
 ### **2.3. Descripción de alto nivel del proyecto y estructura de ficheros**
 
@@ -463,928 +416,271 @@ Cada uno de estos componentes proporciona una función específica en la arquite
 La plataforma se basa en los siguientes componentes principales:
 
 1. **Frontend**: 
-   - Una aplicación cliente en React.js que proporciona la interfaz de usuario.
-   - Incluye componentes y servicios para la autenticación, creación de proyectos, gestión de presupuestos, mensajería y notificaciones.
-   
+   - **React.js**: Aplicación cliente que proporciona la interfaz de usuario.
+   - **TypeScript**: Utilizado para garantizar tipificación estática y robustez en el frontend.
+   - **Estructura de Ficheros**:
+     ```typescript:frontend/
+     frontend/
+     │
+     ├── public/                     # Archivos estáticos
+     │   ├── index.html              # Página HTML principal
+     │   └── assets/                 # Recursos multimedia
+     │
+     ├── src/
+     │   ├── components/             # Componentes reutilizables de la UI
+     │   │   ├── Navbar.tsx
+     │   │   ├── ChatBox.tsx
+     │   │   └── ProjectForm.tsx
+     │   │
+     │   ├── pages/                  # Páginas principales de la aplicación
+     │   │   ├── HomePage.tsx
+     │   │   ├── ProjectPage.tsx
+     │   │   ├── ProfilePage.tsx
+     │   │   └── ChatPage.tsx
+     │   │
+     │   ├── services/               # Servicios de conexión con la API
+     │   │   ├── authService.ts
+     │   │   ├── projectService.ts
+     │   │   ├── chatService.ts
+     │   │   └── notificationService.ts
+     │   │
+     │   ├── hooks/                  # Custom hooks
+     │   │   ├── useAuth.ts
+     │   │   └── useNotifications.ts
+     │   │
+     │   ├── context/                # Contexto global de la aplicación
+     │   │   ├── AuthContext.tsx
+     │   │   └── NotificationContext.tsx
+     │   │
+     │   ├── types/                  # Tipos y interfaces de TypeScript
+     │   │   ├── User.ts
+     │   │   ├── Project.ts
+     │   │   ├── Chat.ts
+     │   │   └── Notification.ts
+     │   │
+     │   ├── utils/                  # Utilidades y funciones auxiliares
+     │   │   └── formatDate.ts
+     │   │
+     │   └── App.tsx                 # Componente raíz
+     │
+     └── tsconfig.json               # Configuración de TypeScript
+     └── package.json                # Configuración de dependencias
+     ```
+
 2. **API Gateway**:
-   - AWS API Gateway centraliza las solicitudes del cliente, controla el tráfico, autentica usuarios y enruta las solicitudes a los microservicios correspondientes en el backend.
+   - **AWS API Gateway**: Centraliza las solicitudes del cliente, controla el tráfico, autentica usuarios y enruta las solicitudes a los microservicios correspondientes en el backend.
 
 3. **Microservicios del Backend**:
-   - Implementados en Node.js, cada microservicio es independiente y maneja funciones específicas, lo que facilita su despliegue y escalabilidad de forma individual.
-   - Los servicios principales incluyen:
-     - **Autenticación**: Maneja el inicio de sesión, el registro y la gestión de sesiones.
-     - **Gestión de Usuarios**: Administra la información del perfil y las preferencias.
-     - **Gestión de Proyectos**: Permite a los clientes crear y actualizar proyectos, así como recibir presupuestos de los profesionales.
-     - **Chat y Mensajería**: Proporciona comunicación en tiempo real entre clientes y profesionales.
-     - **Notificaciones**: Envía notificaciones relevantes (nuevos proyectos, presupuestos) a través de Amazon SNS.
-     - **Pagos Seguros**: Administra los pagos entre clientes y profesionales, garantizando la protección de fondos mediante escrow.
-     - **Valoraciones**: Permite a clientes y profesionales calificar su experiencia una vez completado el proyecto.
+   - **Implementados en Node.js con TypeScript**, cada microservicio es independiente y maneja funciones específicas, lo que facilita su despliegue y escalabilidad de forma individual.
+   - **Estructura de Ficheros**:
+     ```typescript:backend/
+     backend/
+     │
+     ├── auth-service/               # Servicio de Autenticación
+     │   ├── src/
+     │   │   ├── controllers/        # Controladores de la API
+     │   │   │   └── authController.ts
+     │   │   ├── middlewares/        # Middlewares
+     │   │   │   └── auth.middleware.ts
+     │   │   ├── models/             # Modelos de datos
+     │   │   │   └── User.ts
+     │   │   ├── routes/             # Rutas de la API
+     │   │   │   └── authRoutes.ts
+     │   │   ├── services/           # Lógica de negocio
+     │   │   │   ├── authService.ts
+     │   │   │   └── email.service.ts
+     │   │   ├── utils/              # Utilidades y funciones auxiliares
+     │   │   │   └── errors.ts
+     │   │   ├── config/             # Configuración del servicio
+     │   │   │   └── index.ts
+     │   │   └── index.ts            # Punto de entrada del servicio
+     │   └── tsconfig.json           # Configuración de TypeScript para este microservicio
+     │
+     ├── project-service/            # Servicio de Gestión de Proyectos
+     │   ├── src/
+     │   │   ├── controllers/
+     │   │   ├── models/
+     │   │   ├── routes/
+     │   │   ├── services/
+     │   │   ├── types/
+     │   │   ├── utils/              # Utilidades específicas del servicio
+     │   │   └── index.ts
+     │   └── tsconfig.json
+     │
+     ├── chat-service/               # Servicio de Chat y Mensajería
+     │   ├── src/
+     │   │   ├── controllers/
+     │   │   ├── models/
+     │   │   ├── routes/
+     │   │   ├── services/
+     │   │   ├── queue/              # Manejo de colas de mensajes con SQS
+     │   │   ├── types/
+     │   │   └── index.ts
+     │   └── tsconfig.json
+     │
+     ├── notification-service/       # Servicio de Notificaciones
+     │   ├── src/
+     │   │   ├── controllers/
+     │   │   ├── models/
+     │   │   ├── routes/
+     │   │   ├── services/
+     │   │   ├── sns/                # Configuración de tópicos de SNS
+     │   │   ├── types/
+     │   │   └── index.ts
+     │   └── tsconfig.json
+     │
+     └── payment-service/            # Servicio de Pagos Seguros
+         ├── src/
+         │   ├── controllers/
+         │   ├── models/
+         │   ├── routes/
+         │   ├── services/
+         │   ├── types/
+         │   └── index.ts
+         └── tsconfig.json
+     ```
 
 4. **Sistema de Eventos**:
-   - Amazon SQS y SNS manejan la mensajería y notificaciones en tiempo real, respectivamente, desacoplando la comunicación entre microservicios y mejorando la escalabilidad.
+   - **Amazon SQS y SNS**: Manejan la mensajería y notificaciones en tiempo real, respectivamente, desacoplando la comunicación entre microservicios y mejorando la escalabilidad.
 
 5. **Bases de Datos y Almacenamiento**:
    - **Amazon RDS**: Base de datos relacional para almacenar datos estructurados.
    - **Amazon DynamoDB**: Base de datos NoSQL para datos de mensajería y notificaciones.
    - **Amazon S3**: Almacenamiento de archivos multimedia, documentos y recursos estáticos del proyecto.
 
----
-
-#### **Estructura de Ficheros de la Aplicación Frontend (React con TypeScript)**
-
-```
-frontend/
-│
-├── public/                     # Archivos estáticos
-│   ├── index.html              # Página HTML principal
-│   └── assets/                 # Recursos multimedia
-│
-├── src/
-│   ├── components/             # Componentes reutilizables de la UI
-│   │   ├── Navbar.tsx
-│   │   ├── ChatBox.tsx
-│   │   └── ProjectForm.tsx
-│   │
-│   ├── pages/                  # Páginas principales de la aplicación
-│   │   ├── HomePage.tsx
-│   │   ├── ProjectPage.tsx
-│   │   ├── ProfilePage.tsx
-│   │   └── ChatPage.tsx
-│   │
-│   ├── services/               # Servicios de conexión con la API
-│   │   ├── authService.ts
-│   │   ├── projectService.ts
-│   │   ├── chatService.ts
-│   │   └── notificationService.ts
-│   │
-│   ├── hooks/                  # Custom hooks
-│   │   ├── useAuth.ts
-│   │   └── useNotifications.ts
-│   │
-│   ├── context/                # Contexto global de la aplicación
-│   │   ├── AuthContext.tsx
-│   │   └── NotificationContext.tsx
-│   │
-│   ├── types/                  # Tipos y interfaces de TypeScript
-│   │   ├── User.ts
-│   │   ├── Project.ts
-│   │   ├── Chat.ts
-│   │   └── Notification.ts
-│   │
-│   ├── utils/                  # Utilidades y funciones auxiliares
-│   │   └── formatDate.ts
-│   │
-│   └── App.tsx                 # Componente raíz
-│
-└── tsconfig.json               # Configuración de TypeScript
-└── package.json                # Configuración de dependencias
-```
-
-- **types**: Este directorio contiene las interfaces y tipos definidos en TypeScript, como `User`, `Project`, `Chat`, y `Notification`, que se usan en toda la aplicación para garantizar la tipificación estática.
-- **utils**: Funciones auxiliares como `formatDate` u otras que puedan ser útiles en múltiples partes de la aplicación.
-
----
-
-#### **Estructura de Ficheros de los Microservicios del Backend (Node.js con TypeScript)**
-
-Cada microservicio tiene su propio directorio independiente, utilizando **TypeScript** para aprovechar la tipificación estática y facilitar el mantenimiento.
-
-```
-backend/
-│
-├── auth-service/               # Servicio de Autenticación
-│   ├── src/
-│   │   ├── controllers/        # Controladores de la API
-│   │   │   └── authController.ts
-│   │   ├── models/             # Modelos de datos
-│   │   │   └── User.ts
-│   │   ├── routes/             # Rutas de la API
-│   │   │   └── authRoutes.ts
-│   │   ├── services/           # Lógica de negocio
-│   │   │   └── authService.ts
-│   │   ├── utils/              # Utilidades y funciones auxiliares
-│   │   │   └── jwtUtil.ts
-│   │   ├── types/              # Tipos e interfaces de TypeScript
-│   │   │   └── index.ts
-│   │   └── index.ts            # Punto de entrada del servicio
-│   └── tsconfig.json           # Configuración de TypeScript para este microservicio
-│
-├── user-service/               # Servicio de Gestión de Usuarios
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   ├── types/
-│   │   └── index.ts
-│   └── tsconfig.json
-│
-├── project-service/            # Servicio de Gestión de Proyectos
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   ├── types/
-│   │   ├── utils/              # Utilidades específicas del servicio
-│   │   └── index.ts
-│   └── tsconfig.json
-│
-├── chat-service/               # Servicio de Chat y Mensajería
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   ├── queue/              # Manejo de colas de mensajes con SQS
-│   │   ├── types/
-│   │   └── index.ts
-│   └── tsconfig.json
-│
-├── notification-service/       # Servicio de Notificaciones
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   ├── sns/                # Configuración de tópicos de SNS
-│   │   ├── types/
-│   │   └── index.ts
-│   └── tsconfig.json
-│
-└── payment-service/            # Servicio de Pagos Seguros
-    ├── src/
-    │   ├── controllers/
-    │   ├── models/
-    │   ├── routes/
-    │   ├── services/
-    │   ├── types/
-    │   └── index.ts
-    └── tsconfig.json
-```
-
-- **controllers**: Contiene los controladores que gestionan las solicitudes HTTP y llaman a los servicios correspondientes.
-- **models**: Contiene los modelos de datos definidos en TypeScript, que representan las entidades principales, como `User`, `Project`, `ChatMessage`, etc.
-- **routes**: Define las rutas de la API para cada servicio, vinculando los endpoints con los controladores.
-- **services**: Contiene la lógica de negocio para cada microservicio.
-- **types**: Define tipos e interfaces para cada servicio, facilitando la reutilización y tipificación estática en el proyecto.
-- **utils**: Utilidades y funciones auxiliares que pueden ser específicas para cada servicio, como generación de tokens, validación, formateo, etc.
-- **queue y sns**: En los microservicios de `chat-service` y `notification-service`, estos directorios contienen la configuración y manejo de Amazon SQS y SNS, respectivamente.
-
----
-
-#### Configuración General
-
-Cada microservicio tiene su propio archivo `tsconfig.json` para la configuración de TypeScript, lo que permite que cada servicio sea compilado y desplegado de forma independiente. También es posible usar un archivo `tsconfig.base.json` en la raíz para definir configuraciones comunes que luego se extienden en los archivos `tsconfig.json` de cada microservicio.
-
----
-
-#### Ejemplo de Flujo de Trabajo con TypeScript
-
-1. **Compilación**: Cada microservicio puede compilarse de forma independiente mediante TypeScript, generando archivos `.js` en un directorio `dist` para su despliegue.
-2. **Despliegue**: Los archivos generados en `dist` se despliegan en AWS ECS o Lambda según el diseño de microservicios, permitiendo una integración continua con herramientas como AWS CodePipeline o GitHub Actions.
-3. **Validación de Tipos**: Al utilizar TypeScript tanto en el frontend como en el backend, la tipificación estática permite identificar errores en tiempo de desarrollo, mejorando la robustez del código.
-
-Esta estructura modular y orientada a TypeScript facilita el mantenimiento y la escalabilidad del proyecto, permitiendo el despliegue y actualización de servicios de manera independiente.
-
 #### **Estructura de Ficheros del Sistema de Eventos**
 
 El sistema de eventos se implementa directamente en los microservicios de **Chat** y **Notificaciones**, ya que estos son los encargados de interactuar con **Amazon SQS** y **Amazon SNS**. Los archivos de configuración específicos de SQS y SNS se encuentran en los directorios `queue` y `sns` dentro de los microservicios correspondientes.
 
----
-
 #### **Infraestructura de Bases de Datos y Almacenamiento**
 
-La infraestructura de bases de datos y almacenamiento no tiene una estructura de ficheros en el sentido tradicional, ya que se gestiona mediante servicios en AWS. Sin embargo, la configuración y administración de estos recursos se definen en el despliegue (posiblemente usando herramientas como **AWS CloudFormation** o **Terraform** para mantener la infraestructura como código).
-
----
+La infraestructura de bases de datos y almacenamiento se gestiona mediante servicios en AWS. La configuración y administración de estos recursos se definen en el despliegue utilizando herramientas como **AWS CloudFormation** o **Terraform** para mantener la infraestructura como código.
 
 #### **Resumen del Flujo de Datos en la Arquitectura**
 
-1. **Autenticación**: Los usuarios inician sesión mediante el frontend en React, que se comunica con el `auth-service` a través del API Gateway.
-2. **Creación de Proyectos y Solicitud de Presupuestos**: Los clientes envían los detalles del proyecto al `project-service`, donde los profesionales pueden visualizarlo y enviar presupuestos.
-3. **Chat en Tiempo Real**: Los mensajes de chat se envían al `chat-service`, que los coloca en la cola SQS. El servicio procesa los mensajes y envía notificaciones de nuevos mensajes a los usuarios a través de SNS.
-4. **Notificaciones**: El `notification-service` envía alertas relevantes a los usuarios (nuevos proyectos, presupuestos) a través de SNS.
-5. **Pagos Seguros**: El `payment-service` gestiona los fondos en fideicomiso (escrow) y libera el pago al profesional cuando el proyecto se completa.
-6. **Valoraciones**: Al finalizar el proyecto, los clientes y profesionales pueden dejar una valoración a través del `rating-service`.
-
-### **2.4. Infraestructura y despliegue**
-
-La infraestructura está diseñada para soportar una arquitectura de microservicios y permitir escalabilidad, alta disponibilidad y una experiencia de usuario fluida. Utilizamos **AWS** como proveedor de nube, aprovechando sus servicios de contenedores, bases de datos, almacenamiento y notificaciones para ofrecer un entorno robusto y confiable.
+1. **Autenticación**: Los usuarios inician sesión mediante el frontend en React, que se comunica con el `AuthService` a través del API Gateway.
+2. **Creación de Proyectos y Solicitud de Presupuestos**: Los clientes envían los detalles del proyecto al `ProjectService`, donde los profesionales pueden visualizarlo y enviar presupuestos.
+3. **Chat en Tiempo Real**: Los mensajes de chat se envían al `ChatService`, que los coloca en la cola SQS. El servicio procesa los mensajes y envía notificaciones de nuevos mensajes a los usuarios a través de SNS.
+4. **Notificaciones**: El `NotificationService` envía alertas relevantes a los usuarios (nuevos proyectos, presupuestos) a través de SNS.
+5. **Pagos Seguros**: Los pagos se gestionan a través del `PaymentService`, asegurando transacciones protegidas y liberación de fondos al finalizar los proyectos.
+6. **Valoraciones**: Tras completar un proyecto, tanto clientes como profesionales pueden dejar valoraciones que son manejadas por el `RatingService`.
 
 ---
 
-#### **Infraestructura del Proyecto**
-
-#### **Diagrama de Infraestructura**
-
-```mermaid
-flowchart TD
-    subgraph AWSRegion [AWS Región]
-        subgraph VPC [VPC (Virtual Private Cloud)]
-            subgraph PublicSubnet [Subred Pública]
-                ALB[Application Load Balancer]
-            end
-
-            subgraph PrivateSubnet [Subred Privada]
-                ECSCluster[AWS ECS Cluster]
-                
-                subgraph ECS [Servicios en Contenedores]
-                    AuthService[Servicio de Autenticación]
-                    UserService[Servicio de Usuarios]
-                    ProjectService[Servicio de Proyectos]
-                    ChatService[Servicio de Chat]
-                    NotificationService[Servicio de Notificaciones]
-                    PaymentService[Servicio de Pagos]
-                    RatingService[Servicio de Valoraciones]
-                end
-
-                RDS[(Amazon RDS)]
-                DynamoDB[(Amazon DynamoDB)]
-                SQSQueue[SQS Cola de Mensajes]
-                SNSChatTopic[SNS Tópico de Notificaciones de Chat]
-                SNSNotificationTopic[SNS Tópico de Notificaciones Generales]
-            end
-
-            S3[AWS S3]
-        end
-
-        CloudFront[CloudFront CDN]
-        Amplify[Amplify - Despliegue Frontend]
-    end
-
-    ReactClient[Cliente React] --> CloudFront
-    CloudFront --> Amplify
-    ReactClient --> ALB
-    ALB --> ECSCluster
-    ECSCluster --> RDS
-    ECSCluster --> DynamoDB
-    ECSCluster --> SQSQueue
-    ECSCluster --> SNSNotificationTopic
-    ECSCluster --> SNSChatTopic
-    ECSCluster --> S3
-```
-
----
-
-#### **Descripción de Componentes de la Infraestructura**
-
-1. **Amazon VPC (Virtual Private Cloud)**: Se configura una VPC privada para alojar los recursos del proyecto. Dentro de la VPC, se definen una **subred pública** y una **subred privada** para separar el tráfico y aumentar la seguridad.
-   - **Subred Pública**: Aloja el **Application Load Balancer (ALB)**, que distribuye el tráfico entrante hacia los microservicios en el clúster ECS.
-   - **Subred Privada**: Contiene el clúster de microservicios, bases de datos y colas de mensajería, protegidos de acceso directo desde internet.
-
-2. **Amazon ECS (Elastic Container Service)**: Este servicio gestiona el clúster de contenedores donde se ejecutan los microservicios, cada uno desplegado en contenedores independientes para permitir escalabilidad y despliegue continuo. AWS Fargate puede ser una opción para ejecutar los contenedores sin necesidad de administrar instancias de servidor directamente.
-
-3. **Application Load Balancer (ALB)**: El ALB distribuye las solicitudes entrantes desde los clientes hacia el clúster de ECS, balanceando el tráfico y asegurando la alta disponibilidad. También maneja la autenticación de usuarios y asegura que cada solicitud se redirija al microservicio correspondiente.
-
-4. **Amazon RDS (Relational Database Service)**: Base de datos relacional que almacena datos estructurados, como perfiles de usuario, información de proyectos, transacciones y valoraciones. Configurada en una instancia privada dentro de la VPC, asegura la protección de los datos.
-
-5. **Amazon DynamoDB**: Base de datos NoSQL utilizada para almacenar datos no estructurados, como historiales de mensajes de chat y registros de notificaciones.
-
-6. **Amazon S3 (Simple Storage Service)**: Almacena archivos y recursos estáticos, como imágenes y documentos adjuntos a los proyectos. También sirve archivos multimedia mediante **Amazon CloudFront** para una entrega rápida.
-
-7. **Amazon SQS y SNS**:
-   - **SQS (Simple Queue Service)**: Utilizada para la cola de mensajes en el servicio de chat, permite procesar mensajes de manera asíncrona y desacoplar la mensajería en tiempo real del resto de la infraestructura.
-   - **SNS (Simple Notification Service)**: Distribuye notificaciones de eventos a los usuarios. Incluye un tópico para notificaciones de chat y otro para notificaciones generales, como nuevos proyectos o presupuestos.
-
-8. **Amazon CloudFront**: Una CDN (Content Delivery Network) que acelera la entrega de contenido estático de la aplicación frontend. Al distribuir el contenido globalmente, CloudFront mejora la velocidad de carga para usuarios de distintas ubicaciones geográficas.
-
-9. **AWS Amplify**: Permite el despliegue y gestión del frontend en React, proporcionando integración continua (CI/CD) y herramientas de autenticación y autorización integradas con AWS Cognito.
-
----
-
-#### **Proceso de Despliegue**
-
-El proceso de despliegue se basa en principios de integración continua y despliegue continuo (CI/CD) para garantizar que cada componente del sistema se actualice de manera eficiente y sin interrupciones.
-
-#### **1. Despliegue del Frontend (React en AWS Amplify)**
-
-1. **CI/CD con AWS Amplify**: Amplify está conectado al repositorio de código (por ejemplo, GitHub, GitLab). Cada vez que se realiza un commit en la rama principal o en una rama de despliegue, Amplify ejecuta automáticamente el proceso de compilación y despliegue.
-2. **CloudFront**: Amplify actualiza los archivos en Amazon S3 y CloudFront distribuye estos archivos a través de su CDN para una entrega rápida a los usuarios.
-
-#### **2. Despliegue de Backend (Microservicios en ECS)**
-
-1. **Build y Test en CI/CD**: Utilizamos una herramienta como AWS CodePipeline o GitHub Actions para ejecutar el pipeline de CI/CD. Cada microservicio tiene su propio archivo Dockerfile y configuración de TypeScript, por lo que cada cambio en el código fuente desencadena:
-   - Compilación y validación de TypeScript.
-   - Pruebas unitarias y de integración.
-   - Generación de la imagen Docker.
-   
-2. **Almacenamiento en Amazon ECR (Elastic Container Registry)**: Las imágenes Docker de cada microservicio se almacenan en ECR, el registro de contenedores de AWS.
-
-3. **Despliegue en AWS ECS (Elastic Container Service)**: ECS recupera las imágenes de ECR y despliega los contenedores de microservicios en el clúster.
-   - **Rolling Updates**: ECS realiza actualizaciones de forma continua (rolling updates), lo que permite desplegar nuevas versiones sin interrumpir el servicio para los usuarios.
-   - **Auto Scaling**: ECS permite escalar automáticamente los contenedores según la carga de trabajo. AWS Fargate se puede utilizar para gestionar el escalado y simplificar la gestión de servidores.
-
-#### **3. Bases de Datos y Almacenamiento**
-
-- **Amazon RDS** y **DynamoDB** están configurados y desplegados de forma independiente dentro de la infraestructura en AWS. Estos servicios se gestionan automáticamente mediante políticas de respaldo y recuperación de datos en AWS.
-- **Amazon S3** almacena los archivos estáticos y multimedia. El acceso a estos recursos se controla mediante políticas de seguridad y se distribuye globalmente a través de CloudFront.
-
-#### **4. Gestión de Eventos con SQS y SNS**
-
-- **Configuración de colas y tópicos**: Las colas de SQS y los tópicos de SNS se configuran una vez y se integran con los microservicios correspondientes (Chat y Notificaciones).
-- **Consumo de mensajes**: Los microservicios escuchan en SQS y SNS para procesar mensajes y notificaciones de forma asíncrona, asegurando una experiencia de usuario en tiempo real.
-
----
-
-#### **Resumen del Proceso de Despliegue**
-
-1. **Frontend**: Amplify se encarga del despliegue continuo de la aplicación en React. Los cambios en el código se reflejan de forma automática y se distribuyen a través de CloudFront.
-2. **Backend**: Cada microservicio se construye y despliega en contenedores Docker mediante ECS, con imágenes almacenadas en ECR y gestionadas por CodePipeline.
-3. **Bases de Datos**: RDS y DynamoDB están configurados para ser escalables y asegurar la disponibilidad y durabilidad de los datos.
-4. **Mensajería y Notificaciones**: Los mensajes y notificaciones se gestionan mediante SQS y SNS, asegurando un flujo de datos en tiempo real y escalable para los servicios de chat y notificaciones.
-
-Este enfoque de infraestructura y despliegue permite una escalabilidad horizontal y un proceso de actualización continua sin interrupciones, asegurando una plataforma robusta y adaptable a medida que crece el volumen de usuarios y proyectos en la plataforma.
-
-### **2.5. Seguridad**
-
-#### 1. **Autenticación y Autorización**
-
-   - **Autenticación con AWS Cognito**: AWS Cognito se encargará de la autenticación de los usuarios, proporcionando un flujo seguro de inicio de sesión y manejo de sesiones. Utiliza JSON Web Tokens (JWT) para verificar la identidad de los usuarios en cada solicitud.
-   - **Autorización basada en roles**: El sistema implementa niveles de acceso en función de los roles (clientes, profesionales, administradores). AWS Cognito y las políticas de IAM (Identity and Access Management) de AWS se utilizan para restringir el acceso a recursos y operaciones específicas según el rol del usuario.
-   
-   **Ejemplo**: Solo los usuarios con el rol "profesional" podrán enviar presupuestos, mientras que solo los "clientes" podrán crear proyectos.
-
-#### 2. **Comunicación Segura (HTTPS)**
-
-   - **Certificado SSL**: Todo el tráfico entre el cliente (frontend) y el backend estará encriptado mediante HTTPS, utilizando un certificado SSL/TLS. Esto asegura que los datos transmitidos, incluidos datos sensibles como contraseñas y detalles personales, estén protegidos de ataques de intermediarios (man-in-the-middle).
-   - **AWS Certificate Manager (ACM)**: Se utiliza ACM para gestionar los certificados SSL/TLS y aplicarlos al Application Load Balancer (ALB), simplificando la configuración y renovación de los certificados.
-
-#### 3. **Protección de API con AWS API Gateway**
-
-   - **Control de acceso y autenticación**: El API Gateway de AWS se configurará para exigir tokens JWT en cada solicitud. Solo los usuarios autenticados podrán acceder a los endpoints, y los tokens se verificarán en cada solicitud.
-   - **Limitación de tasas (Rate Limiting)**: Para evitar ataques de denegación de servicio (DDoS), se establece una limitación de tasas en el API Gateway que restringe la cantidad de solicitudes que un usuario o dirección IP puede realizar en un período específico.
-   
-   **Ejemplo**: Se limita a 100 solicitudes por minuto por usuario, de modo que si un usuario o un bot excede este límite, su acceso se restringe temporalmente.
-
-#### 4. **Seguridad de Bases de Datos**
-
-   - **Control de Acceso a Nivel de Red**: Las bases de datos (Amazon RDS y DynamoDB) se configuran dentro de una subred privada, inaccesible desde internet. Solo los microservicios dentro de la VPC pueden acceder a ellas.
-   - **Cifrado en Tránsito y en Reposo**:
-      - **Cifrado en tránsito**: La comunicación entre los microservicios y las bases de datos está encriptada usando SSL/TLS.
-      - **Cifrado en reposo**: Amazon RDS y DynamoDB almacenan datos encriptados para proteger la información de usuarios, proyectos y transacciones. AWS Key Management Service (KMS) se encarga de gestionar las claves de cifrado.
-   
-   **Ejemplo**: La información de perfiles de usuario y datos de proyectos se almacenan en Amazon RDS, y todos los datos están encriptados en reposo para evitar la exposición en caso de un acceso no autorizado.
-
-#### 5. **Seguridad de Datos en Amazon S3**
-
-   - **Cifrado de Archivos en Reposo**: Todos los archivos cargados en Amazon S3, como imágenes de proyectos o documentos adjuntos, están encriptados utilizando AES-256.
-   - **Control de Acceso a Objetos**: Las políticas de IAM y las políticas de bucket de S3 limitan el acceso a los archivos solo a los usuarios o microservicios que lo necesitan. El acceso público está completamente deshabilitado para evitar la exposición accidental de datos.
-   - **AWS CloudFront para Control de Acceso**: Los archivos se distribuyen a través de CloudFront, donde se pueden configurar reglas para permitir el acceso solo a usuarios autenticados, utilizando cookies o tokens de sesión.
-
-#### 6. **Protección contra Ataques de Inyección y Validación de Datos**
-
-   - **Sanitización y Validación de Entradas**: Todos los datos enviados por el usuario se sanitizan y validan tanto en el frontend como en el backend para proteger contra ataques de inyección (como SQL Injection y NoSQL Injection). Esto incluye la validación de datos de formularios en el frontend (React) y la verificación exhaustiva en el backend.
-   - **Librerías de Seguridad**: Se utilizan librerías como `express-validator` en Node.js para verificar que los datos cumplan con el formato esperado antes de procesarlos o almacenarlos.
-
-   **Ejemplo**: Antes de guardar un mensaje de chat en la base de datos, el sistema valida que el mensaje no contenga secuencias que puedan interpretarse como comandos de inyección.
-
-#### 7. **Gestión de Secretos y Variables de Entorno**
-
-   - **AWS Secrets Manager y Parameter Store**: Las credenciales sensibles (como claves de acceso a bases de datos, API keys de terceros, etc.) se almacenan de forma segura en AWS Secrets Manager o AWS Parameter Store. Esto evita almacenar credenciales en el código fuente.
-   - **Acceso Restringido mediante IAM**: Solo los microservicios que necesitan acceder a estos secretos tienen permisos específicos de IAM, reduciendo el riesgo de exposición.
-
-#### 8. **Monitoreo y Alerta de Seguridad**
-
-   - **AWS CloudWatch**: Utilizado para monitorizar el tráfico, los errores y las métricas de rendimiento en tiempo real de los microservicios. Los logs de acceso y de errores se envían a CloudWatch, lo que permite detectar patrones sospechosos.
-   - **AWS GuardDuty**: Herramienta de seguridad que analiza los logs de tráfico y eventos de AWS en busca de comportamientos anómalos y amenazas potenciales, como accesos inusuales o intentos de ataque.
-   - **Alertas de Seguridad**: Se configuran alertas en CloudWatch para eventos críticos (como intentos de acceso fallidos repetidos, aumento de errores 500, etc.), permitiendo la respuesta rápida a posibles incidentes.
-
-#### 9. **Políticas de Seguridad de AWS IAM**
-
-   - **Principio de Mínimo Privilegio**: Todos los roles y políticas de IAM siguen el principio de mínimo privilegio, asegurando que cada microservicio y usuario solo tenga acceso a los recursos y acciones estrictamente necesarios.
-   - **Rotación de Credenciales**: Las credenciales y claves de acceso de IAM se rotan regularmente, y se revisan los permisos de IAM para mantener la seguridad y minimizar el riesgo de exposición.
-
-#### 10. **Protección de Pagos y Datos Financieros**
-
-   - **Integración con Pasarelas de Pago**: Las transacciones de pago se gestionan a través de pasarelas de pago seguras, como Stripe o PayPal, que cumplen con los estándares de seguridad PCI-DSS.
-   - **Tokenización de Pagos**: Los datos sensibles de tarjetas de crédito no se almacenan en el sistema; en su lugar, se utiliza tokenización para proteger los datos financieros, enviando solo tokens de pago que pueden ser procesados de manera segura por la pasarela de pago.
-
-### **2.6. Tests**
-
-#### **1. Pruebas Unitarias**
-
-Las pruebas unitarias se centran en la funcionalidad de componentes individuales, tanto en el frontend como en el backend.
-
-- **Frontend (React con TypeScript)**:
-  - **Pruebas de Componentes**: Verificación de que los componentes principales (como formularios, botones y modales) renderizan correctamente y responden a eventos de usuario (clics, entradas de texto).
-  - **Pruebas de Servicios**: Los servicios que se comunican con la API (como `authService`, `projectService`) serán probados de manera aislada para garantizar que manejan las respuestas y errores de la API correctamente.
-
-- **Backend (Node.js con TypeScript)**:
-  - **Pruebas de Controladores**: Validación de los controladores de API en cada microservicio para verificar que responden adecuadamente a diferentes tipos de solicitudes (GET, POST, PUT, DELETE).
-  - **Pruebas de Servicios**: Los servicios internos de cada microservicio se prueban de manera aislada para asegurar que la lógica de negocio funciona correctamente.
-  - **Mocks de Dependencias**: Utilización de mocks para simular las interacciones con bases de datos y otros servicios externos.
-
-**Herramientas**: Jest para pruebas en el frontend y backend, y React Testing Library para pruebas de componentes en React.
-
-#### **2. Pruebas de Integración**
-
-Las pruebas de integración garantizan que los diferentes componentes dentro de cada microservicio interactúen correctamente entre sí y que los microservicios funcionen bien en conjunto.
-
-- **Frontend-Backend**: Verificación de que el frontend puede interactuar con los endpoints de la API. Esto incluye probar el flujo de autenticación, la creación de proyectos y el envío de mensajes de chat.
-- **Integración de Microservicios**: Validación de la interacción entre microservicios, como:
-  - El flujo entre el `auth-service` y `user-service` para validar y gestionar usuarios autenticados.
-  - La comunicación entre el `project-service` y `notification-service` para enviar notificaciones cuando se crea o actualiza un proyecto.
-  - El uso de colas de mensajes en el `chat-service` con SQS y el `notification-service` con SNS para notificaciones en tiempo real.
-
-**Herramientas**: Jest para el backend, con supertest para pruebas de endpoints de API. En el caso del frontend, se integrarán tests simulando la API.
-
-#### **3. Pruebas de End-to-End (E2E)**
-
-Las pruebas E2E verifican flujos completos desde el punto de vista del usuario final, cubriendo el frontend y la interacción con el backend.
-
-- **Escenarios de Usuario**: Se simulan escenarios clave de usuario, como:
-  - Registro e inicio de sesión del usuario.
-  - Creación de un proyecto y recepción de presupuestos.
-  - Comunicación en tiempo real mediante el chat.
-  - Flujo de pagos seguros y valoración de servicios.
-- **Automatización de Pruebas E2E**: Utilización de herramientas de automatización para realizar pruebas de los flujos completos de usuario, cubriendo desde el frontend hasta la interacción con los microservicios backend.
-
-**Herramientas**: Cypress para pruebas de E2E, ya que permite automatizar pruebas de frontend y simular las interacciones con el backend en un entorno controlado.
-
-#### **4. Pruebas de Seguridad**
-
-Las pruebas de seguridad son esenciales para identificar posibles vulnerabilidades y asegurar que la aplicación maneje correctamente el acceso y los datos sensibles.
-
-- **Pruebas de Autenticación y Autorización**: Verificación de que solo los usuarios autenticados pueden acceder a los recursos y de que los roles de usuario restringen el acceso a las funcionalidades adecuadas.
-- **Pruebas de Inyección y Validación de Entradas**: Pruebas contra vulnerabilidades comunes, como SQL Injection y Cross-Site Scripting (XSS), asegurando que la validación de entradas previene estos ataques.
-- **Pruebas de Control de Acceso**: Verificación de que los datos de usuario y los recursos de proyecto están protegidos y solo accesibles a los usuarios autorizados.
-
-**Herramientas**: OWASP ZAP para detectar vulnerabilidades de seguridad en la aplicación y Postman para verificar manualmente los permisos y el control de acceso.
-
-#### **5. Pruebas de Rendimiento**
-
-Las pruebas de rendimiento garantizan que el sistema funcione bien bajo carga y que mantenga tiempos de respuesta adecuados.
-
-- **Pruebas de Carga en el Backend**: Se simula una carga alta de solicitudes para evaluar el rendimiento de los microservicios, especialmente en operaciones críticas como la mensajería y la creación de proyectos.
-- **Pruebas de Estrés para el Chat y Notificaciones**: Evaluación del rendimiento del `chat-service` y `notification-service` bajo una carga alta de mensajes y notificaciones, asegurando que el sistema maneje picos de tráfico sin fallos.
-
-**Herramientas**: Locust para pruebas de carga y estrés, y AWS CloudWatch para monitorizar métricas de rendimiento en tiempo real.
-
----
-
-#### **Resumen de Tests para el MVP**
-
-- **Pruebas Unitarias**: Aseguran que cada componente funcione correctamente de forma aislada.
-- **Pruebas de Integración**: Verifican la interacción entre componentes y microservicios.
-- **Pruebas de End-to-End (E2E)**: Simulan el flujo completo de usuario para validar la experiencia.
-- **Pruebas de Seguridad**: Identifican vulnerabilidades y verifican el control de acceso y autenticación.
-- **Pruebas de Rendimiento**: Evalúan la capacidad del sistema para manejar una alta carga y garantizar la eficiencia.
-
----
-
-## 3. Modelo de Datos
-
-### **3.1. Diagrama del modelo de datos:**
-
-```mermaid
-erDiagram
-
-%% Entidad Usuario
-USER {
-    UUID user_id PK "Identificador único del usuario"
-    VARCHAR(255) username UNIQUE NOT NULL "Nombre de usuario"
-    VARCHAR(255) email UNIQUE NOT NULL "Correo electrónico del usuario"
-    VARCHAR(255) password_hash NOT NULL "Hash de la contraseña del usuario"
-    ENUM role NOT NULL "Rol del usuario: cliente o profesional"
-    TIMESTAMP created_at DEFAULT CURRENT_TIMESTAMP "Fecha de creación del usuario"
-}
-
-%% Entidad Perfil de Usuario
-USER_PROFILE {
-    UUID profile_id PK "Identificador único del perfil"
-    UUID user_id FK "Identificador del usuario"
-    VARCHAR(255) full_name NOT NULL "Nombre completo del usuario"
-    TEXT bio "Descripción breve o biografía del usuario"
-    VARCHAR(255) phone_number UNIQUE "Número de teléfono del usuario"
-    VARCHAR(255) location "Ubicación del usuario"
-    TIMESTAMP updated_at DEFAULT CURRENT_TIMESTAMP "Fecha de última actualización del perfil"
-}
-
-%% Entidad Proyecto
-PROJECT {
-    UUID project_id PK "Identificador único del proyecto"
-    UUID client_id FK "Identificador del cliente que crea el proyecto"
-    VARCHAR(255) title NOT NULL "Título del proyecto"
-    TEXT description NOT NULL "Descripción del proyecto"
-    ENUM status DEFAULT 'open' "Estado del proyecto: abierto, en progreso, completado, cerrado"
-    TIMESTAMP created_at DEFAULT CURRENT_TIMESTAMP "Fecha de creación del proyecto"
-    TIMESTAMP updated_at DEFAULT CURRENT_TIMESTAMP "Fecha de última actualización del proyecto"
-}
-
-%% Entidad Presupuesto
-QUOTE {
-    UUID quote_id PK "Identificador único del presupuesto"
-    UUID project_id FK "Identificador del proyecto"
-    UUID professional_id FK "Identificador del profesional que envía el presupuesto"
-    DECIMAL(10, 2) amount NOT NULL "Monto del presupuesto"
-    ENUM status DEFAULT 'pending' "Estado del presupuesto: pendiente, aceptado, rechazado"
-    TIMESTAMP created_at DEFAULT CURRENT_TIMESTAMP "Fecha de creación del presupuesto"
-    TIMESTAMP updated_at DEFAULT CURRENT_TIMESTAMP "Fecha de última actualización del presupuesto"
-}
-
-%% Entidad Mensaje de Chat
-CHAT_MESSAGE {
-    UUID message_id PK "Identificador único del mensaje"
-    UUID project_id FK "Identificador del proyecto asociado al mensaje"
-    UUID sender_id FK "Identificador del usuario que envía el mensaje"
-    TEXT content NOT NULL "Contenido del mensaje de chat"
-    TIMESTAMP sent_at DEFAULT CURRENT_TIMESTAMP "Fecha y hora en que se envió el mensaje"
-}
-
-%% Entidad Valoración
-RATING {
-    UUID rating_id PK "Identificador único de la valoración"
-    UUID project_id FK "Identificador del proyecto relacionado"
-    UUID reviewer_id FK "Identificador del usuario que realiza la valoración"
-    UUID reviewed_id FK "Identificador del usuario que recibe la valoración"
-    INTEGER rating NOT NULL CHECK (rating >= 1 AND rating <= 5) "Calificación en una escala de 1 a 5"
-    TEXT comment "Comentario adicional de la valoración"
-    TIMESTAMP created_at DEFAULT CURRENT_TIMESTAMP "Fecha de creación de la valoración"
-}
-
-%% Relaciones
-USER ||--o{ USER_PROFILE : has
-USER ||--o{ PROJECT : owns
-USER ||--o{ QUOTE : submits
-USER ||--o{ CHAT_MESSAGE : sends
-USER ||--o{ RATING : gives
-PROJECT ||--o{ QUOTE : has
-PROJECT ||--o{ CHAT_MESSAGE : includes
-PROJECT ||--o{ RATING : receives
-```
-
-### **3.2. Descripción de entidades principales:**
-
-#### **1. USER**
-- **Descripción**: Representa a cada usuario registrado, ya sea cliente o profesional.
-- **Atributos**:
-  - `user_id`: UUID, clave primaria.
-  - `username`: Nombre de usuario, único y no nulo.
-  - `email`: Correo electrónico, único y no nulo.
-  - `password_hash`: Hash de la contraseña, no nulo.
-  - `role`: Rol del usuario (`cliente` o `profesional`), no nulo.
-  - `created_at`: Fecha de creación, valor predeterminado es la fecha y hora actual.
-- **Relaciones**:
-  - Un usuario puede tener uno o varios perfiles (`USER_PROFILE`).
-  - Un usuario puede crear uno o varios proyectos (`PROJECT`).
-  - Un usuario puede enviar uno o varios presupuestos (`QUOTE`).
-  - Un usuario puede enviar uno o varios mensajes de chat (`CHAT_MESSAGE`).
-  - Un usuario puede dar y recibir valoraciones (`RATING`).
-
-#### **2. USER_PROFILE**
-- **Descripción**: Detalles adicionales del perfil del usuario, como nombre completo y ubicación.
-- **Atributos**:
-  - `profile_id`: UUID, clave primaria.
-  - `user_id`: UUID, clave foránea que referencia a `USER`.
-  - `full_name`: Nombre completo del usuario, no nulo.
-  - `bio`: Descripción breve o biografía.
-  - `phone_number`: Número de teléfono, único.
-  - `location`: Ubicación del usuario.
-  - `updated_at`: Fecha de última actualización.
-- **Relaciones**:
-  - Cada perfil pertenece a un usuario (`USER`).
-
-#### **3. PROJECT**
-- **Descripción**: Representa un proyecto creado por un cliente.
-- **Atributos**:
-  - `project_id`: UUID, clave primaria.
-  - `client_id`: UUID, clave foránea que referencia a `USER` (cliente).
-  - `title`: Título del proyecto, no nulo.
-  - `description`: Descripción detallada del proyecto, no nulo.
-  - `status`: Estado del proyecto (abierto, en progreso, completado, cerrado).
-  - `created_at` y `updated_at`: Fechas de creación y actualización.
-- **Relaciones**:
-  - Un proyecto puede tener múltiples presupuestos (`QUOTE`).
-  - Un proyecto puede incluir múltiples mensajes de chat (`CHAT_MESSAGE`).
-  - Un proyecto puede recibir múltiples valoraciones (`RATING`).
-
-#### **4. QUOTE**
-- **Descripción**: Representa un presupuesto enviado por un profesional para un proyecto.
-- **Atributos**:
-  - `quote_id`: UUID, clave primaria.
-  - `project_id`: UUID, clave foránea que referencia a `PROJECT`.
-  - `professional_id`: UUID, clave foránea que referencia a `USER` (profesional).
-  - `amount`: Monto del presupuesto, no nulo.
-  - `status`: Estado del presupuesto (pendiente, aceptado, rechazado).
-  - `created_at` y `updated_at`: Fechas de creación y actualización.
-- **Relaciones**:
-  - Cada presupuesto pertenece a un proyecto (`PROJECT`).
-  - Un profesional envía múltiples presupuestos (`USER`).
-
-#### **5. CHAT_MESSAGE**
-- **Descripción**: Representa un mensaje de chat entre el cliente y los profesionales interesados en un proyecto.
-- **Atributos**:
-  - `message_id`: UUID, clave primaria.
-  - `project_id`: UUID, clave foránea que referencia a `PROJECT`.
-  - `sender_id`: UUID, clave foránea que referencia a `USER`.
-  - `content`: Contenido del mensaje de chat, no nulo.
-  - `sent_at`: Fecha y hora en que se envió el mensaje.
-- **Relaciones**:
-  - Cada mensaje está asociado a un proyecto (`PROJECT`).
-  - Cada mensaje es enviado por un usuario (`USER`).
-
-#### **6. RATING**
-- **Descripción**: Representa una valoración de un usuario hacia otro al completar un proyecto.
-- **Atributos**:
-  - `rating_id`: UUID, clave primaria.
-  - `project_id`: UUID, clave foránea que referencia a `PROJECT`.
-  - `reviewer_id`: UUID, clave foránea que referencia a `USER` (quien realiza la valoración).
-  - `reviewed_id`: UUID, clave foránea que referencia a `USER` (quien recibe la valoración).
-  - `rating`: Calificación numérica (1 a 5), con restricción de rango.
-  - `comment`: Comentario adicional de la valoración.
-  - `created_at`: Fecha de creación de la valoración.
-- **Relaciones**:
-  - Cada valoración está asociada a un proyecto (`PROJECT`).
-  - Un usuario puede realizar valoraciones hacia otros usuarios (`USER`).
+## 3. Modelo de datos
+
+El modelo de datos está diseñado utilizando **Prisma ORM**, facilitando la interacción con bases de datos PostgreSQL. A continuación, se detallan los principales modelos utilizados en la plataforma.
+
+### **Usuarios**
+
+- **Campos principales**:
+  - `user_id`: Identificador único del usuario.
+  - `name`: Nombre completo del usuario.
+  - `email`: Correo electrónico único.
+  - `password`: Contraseña hash.
+  - `role`: Rol del usuario (cliente o profesional).
+  - `created_at` y `updated_at`: Tiempos de creación y actualización del registro.
+
+### **Proyectos**
+
+- **Campos principales**:
+  - `project_id`: Identificador único del proyecto.
+  - `client_id`: Referencia al cliente que crea el proyecto.
+  - `professional_id`: Referencia al profesional asignado (opcional).
+  - `title`: Título del proyecto.
+  - `description`: Descripción detallada del proyecto.
+  - `status`: Estado del proyecto (open, in_progress, completed, closed).
+  - `created_at` y `updated_at`: Tiempos de creación y actualización del registro.
+
+### **Presupuestos**
+
+- **Campos principales**:
+  - `quote_id`: Identificador único del presupuesto.
+  - `project_id`: Referencia al proyecto relacionado.
+  - `professional_id`: Referencia al profesional que envía el presupuesto.
+  - `amount`: Monto del presupuesto.
+  - `message`: Mensaje opcional del profesional.
+  - `status`: Estado del presupuesto (pending, accepted, rejected).
+  - `created_at` y `updated_at`: Tiempos de creación y actualización del registro.
+
+### **Valoraciones**
+
+- **Campos principales**:
+  - `rating_id`: Identificador único de la valoración.
+  - `project_id`: Referencia al proyecto valorado.
+  - `client_id`: Referencia al cliente que realiza la valoración.
+  - `professional_id`: Referencia al profesional valorado.
+  - `rating`: Puntuación otorgada.
+  - `comment`: Comentario opcional.
+  - `created_at` y `updated_at`: Tiempos de creación y actualización del registro.
+
+### **Chats**
+
+- **Campos principales**:
+  - `chat_id`: Identificador único del chat.
+  - `project_id`: Referencia al proyecto asociado.
+  - `messages`: Lista de mensajes dentro del chat, almacenados en DynamoDB para alta disponibilidad y rendimiento.
+  - `created_at` y `updated_at`: Tiempos de creación y actualización del registro.
 
 ---
 
 ## 4. Especificación de la API
 
-A continuación se describe la especificación de los tres endpoints principales de la API para el MVP en formato OpenAPI. Incluye el esquema de autenticación, los parámetros de cada endpoint y ejemplos de petición y respuesta.
+La API de ChapuExpress está diseñada siguiendo principios RESTful, proporcionando endpoints claros y seguros para interactuar con los diferentes recursos de la plataforma. A continuación, se detallan los principales endpoints disponibles.
+
+### **Autenticación**
+
+- `POST /auth/register`: Registrar un nuevo usuario.
+- `POST /auth/login`: Iniciar sesión y obtener un token JWT.
+- `POST /auth/forgot-password`: Solicitar recuperación de contraseña.
+- `POST /auth/reset-password`: Restablecer la contraseña usando un token.
+
+### **Usuarios**
+
+- `GET /users/:id`: Obtener información de un usuario específico (requiere autenticación).
+- `PUT /users/:id`: Actualizar información de un usuario (requiere autenticación y permisos).
+- `GET /users/me`: Obtener información del usuario autenticado.
+
+### **Proyectos**
+
+- `POST /projects`: Crear un nuevo proyecto (cliente autenticado).
+- `PUT /projects/:id`: Actualizar un proyecto existente (cliente autenticado).
+- `GET /projects/:id`: Obtener detalles de un proyecto específico.
+- `GET /projects`: Listar todos los proyectos del cliente autenticado.
+- `POST /projects/:id/assign`: Asignar un profesional a un proyecto (cliente autenticado).
+
+### **Presupuestos**
+
+- `POST /quotes`: Crear un nuevo presupuesto (profesional autenticado).
+- `PUT /quotes/:id`: Actualizar un presupuesto existente (profesional autenticado).
+- `POST /quotes/:id/retract`: Retirar un presupuesto (profesional autenticado).
+- `GET /quotes/project/:projectId`: Listar todos los presupuestos asociados a un proyecto.
+- `GET /quotes/professional`: Listar todos los presupuestos enviados por el profesional autenticado.
+
+### **Chats**
+
+- `GET /chats/:projectId`: Obtener el historial del chat de un proyecto específico.
+- `POST /chats/:projectId/messages`: Enviar un nuevo mensaje en el chat de un proyecto.
+
+### **Notificaciones**
+
+- `GET /notifications`: Obtener todas las notificaciones del usuario autenticado.
+- `PUT /notifications/:id/read`: Marcar una notificación como leída.
+
+### **Pagos**
+
+- `POST /payments/create`: Crear una nueva transacción de pago.
+- `GET /payments/:id`: Obtener detalles de una transacción específica.
+- `PUT /payments/:id/release`: Liberar fondos al profesional tras completar el proyecto.
+
+### **Valoraciones**
+
+- `POST /ratings`: Crear una nueva valoración para un proyecto completado.
+- `GET /ratings/:projectId`: Obtener todas las valoraciones de un proyecto específico.
+
+#### Ejemplos de Solicitudes y Respuestas
 
 ---
-
-### **4. Especificación de la API (OpenAPI)**
-
-```yaml
-openapi: 3.0.0
-info:
-  title: Plataforma de Proyectos de Bricolaje y Construcción - API
-  version: 1.0.0
-  description: API principal para la plataforma, que permite la gestión de usuarios, proyectos, presupuestos y mensajes de chat.
-
-servers:
-  - url: https://api.example.com/v1
-    description: Servidor de Producción
-
-components:
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-
-security:
-  - BearerAuth: []
-
-paths:
-  /auth/login:
-    post:
-      summary: Iniciar sesión
-      tags:
-        - Autenticación
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: "usuario@example.com"
-                password:
-                  type: string
-                  example: "password123"
-      responses:
-        '200':
-          description: Inicio de sesión exitoso
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  access_token:
-                    type: string
-                    description: Token JWT para autenticación.
-                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-        '401':
-          description: Credenciales inválidas
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Credenciales incorrectas"
-      
-  /projects:
-    post:
-      summary: Crear un nuevo proyecto
-      tags:
-        - Proyectos
-      security:
-        - BearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                  example: "Reforma de baño"
-                description:
-                  type: string
-                  example: "Necesito reformar el baño completo, incluyendo plomería y azulejos."
-      responses:
-        '201':
-          description: Proyecto creado exitosamente
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  project_id:
-                    type: string
-                    description: ID del proyecto creado.
-                    example: "uuid-del-proyecto"
-                  title:
-                    type: string
-                    example: "Reforma de baño"
-                  description:
-                    type: string
-                    example: "Necesito reformar el baño completo, incluyendo plomería y azulejos."
-                  status:
-                    type: string
-                    example: "open"
-                  created_at:
-                    type: string
-                    format: date-time
-                    example: "2024-11-03T14:55:00Z"
-        '401':
-          description: Usuario no autenticado
-        '400':
-          description: Datos de entrada inválidos
-
-  /projects/{project_id}/quotes:
-    post:
-      summary: Enviar presupuesto para un proyecto
-      tags:
-        - Presupuestos
-      security:
-        - BearerAuth: []
-      parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: string
-            example: "uuid-del-proyecto"
-          description: ID del proyecto al que se enviará el presupuesto
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                amount:
-                  type: number
-                  format: double
-                  example: 1500.00
-                message:
-                  type: string
-                  example: "Este es el presupuesto para la reforma de su baño, incluye materiales y mano de obra."
-      responses:
-        '201':
-          description: Presupuesto enviado exitosamente
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  quote_id:
-                    type: string
-                    description: ID del presupuesto creado.
-                    example: "uuid-del-presupuesto"
-                  project_id:
-                    type: string
-                    example: "uuid-del-proyecto"
-                  amount:
-                    type: number
-                    format: double
-                    example: 1500.00
-                  status:
-                    type: string
-                    example: "pending"
-                  created_at:
-                    type: string
-                    format: date-time
-                    example: "2024-11-03T15:00:00Z"
-        '401':
-          description: Usuario no autenticado
-        '404':
-          description: Proyecto no encontrado
-```
-
----
-
-### **Descripción de los Endpoints**
-
-#### **1. Autenticación: Iniciar Sesión**
-
-- **Endpoint**: `POST /auth/login`
-- **Descripción**: Permite a los usuarios iniciar sesión en la plataforma.
-- **Parámetros**:
-  - **Body**:
-    - `email`: Correo electrónico del usuario (string, requerido).
-    - `password`: Contraseña del usuario (string, requerido).
-- **Respuesta**:
-  - `200 OK`: Devuelve un token JWT en el campo `access_token` si las credenciales son válidas.
-  - `401 Unauthorized`: Devuelve un mensaje de error si las credenciales son incorrectas.
-
-##### **Ejemplo de Petición**
-```json
-{
-  "email": "usuario@example.com",
-  "password": "password123"
-}
-```
-
-##### **Ejemplo de Respuesta**
-```json
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
-
----
-
-#### **2. Proyectos: Crear Proyecto**
-
-- **Endpoint**: `POST /projects`
-- **Descripción**: Permite a los clientes crear un nuevo proyecto.
-- **Autenticación**: Requiere un token JWT válido en el encabezado `Authorization`.
-- **Parámetros**:
-  - **Body**:
-    - `title`: Título del proyecto (string, requerido).
-    - `description`: Descripción detallada del proyecto (string, requerido).
-- **Respuesta**:
-  - `201 Created`: Devuelve el ID del proyecto creado, junto con los detalles básicos.
-  - `401 Unauthorized`: Devuelve un mensaje de error si el usuario no está autenticado.
-  - `400 Bad Request`: Devuelve un mensaje de error si los datos de entrada son inválidos.
-
-##### **Ejemplo de Petición**
-```json
-{
-  "title": "Reforma de baño",
-  "description": "Necesito reformar el baño completo, incluyendo plomería y azulejos."
-}
-```
-
-##### **Ejemplo de Respuesta**
-```json
-{
-  "project_id": "uuid-del-proyecto",
-  "title": "Reforma de baño",
-  "description": "Necesito reformar el baño completo, incluyendo plomería y azulejos.",
-  "status": "open",
-  "created_at": "2024-11-03T14:55:00Z"
-}
-```
-
----
-
-#### **3. Presupuestos: Enviar Presupuesto**
-
-- **Endpoint**: `POST /projects/{project_id}/quotes`
-- **Descripción**: Permite a los profesionales enviar un presupuesto para un proyecto específico.
-- **Autenticación**: Requiere un token JWT válido en el encabezado `Authorization`.
-- **Parámetros**:
-  - **Path**:
-    - `project_id`: ID del proyecto al que se enviará el presupuesto (string, requerido).
-  - **Body**:
-    - `amount`: Monto del presupuesto (number, requerido).
-    - `message`: Mensaje adicional con detalles del presupuesto (string, opcional).
-- **Respuesta**:
-  - `201 Created`: Devuelve el ID del presupuesto creado y los detalles básicos.
-  - `401 Unauthorized`: Devuelve un mensaje de error si el usuario no está autenticado.
-  - `404 Not Found`: Devuelve un mensaje de error si el proyecto no existe.
-
-##### **Ejemplo de Petición**
-```json
-{
-  "amount": 1500.00,
-  "message": "Este es el presupuesto para la reforma de su baño, incluye materiales y mano de obra."
-}
-```
-
-##### **Ejemplo de Respuesta**
-```json
-{
-  "quote_id": "uuid-del-presupuesto",
-  "project_id": "uuid-del-proyecto",
-  "amount": 1500.00,
-  "status": "pending",
-  "created_at": "2024-11-03T15:00:00Z"
-}
-```
 
 ## 5. Historias de Usuario
 
@@ -1430,7 +726,7 @@ Aquí tienes las historias de usuario para el MVP, detalladas y con los casos de
   - El cliente debe poder crear un proyecto proporcionando:
     - Título del proyecto (obligatorio)
     - Descripción detallada del proyecto (obligatorio)
-  - El proyecto se guarda en el sistema con el estado “abierto” y está disponible para que los profesionales lo vean y envíen presupuestos.
+  - El proyecto se guarda en el sistema con el estado "abierto" y está disponible para que los profesionales lo vean y envíen presupuestos.
   - Si el título o la descripción están vacíos, el sistema muestra un mensaje de error y no permite crear el proyecto.
   - Al crear el proyecto, el cliente es redirigido a la pantalla de detalles del proyecto.
 
@@ -1462,10 +758,10 @@ Aquí tienes las historias de usuario para el MVP, detalladas y con los casos de
 > **Como** profesional, **quiero** enviar un presupuesto a un proyecto de cliente **para** ofrecer mis servicios y participar en la contratación.
 
 - **Criterios de Aceptación**:
-  - El profesional debe poder enviar un presupuesto para un proyecto “abierto”, proporcionando:
+  - El profesional debe poder enviar un presupuesto para un proyecto "abierto", proporcionando:
     - Monto del presupuesto (obligatorio)
     - Mensaje explicativo o detalles adicionales (opcional)
-  - El presupuesto se guarda con el estado “pendiente” y el cliente es notificado de la recepción del presupuesto.
+  - El presupuesto se guarda con el estado "pendiente" y el cliente es notificado de la recepción del presupuesto.
   - El profesional recibe un mensaje de confirmación al enviar el presupuesto.
   - El profesional no puede enviar más de un presupuesto para el mismo proyecto (solo puede modificar o retirar el presupuesto enviado).
 
@@ -1487,8 +783,8 @@ Aquí tienes las historias de usuario para el MVP, detalladas y con los casos de
 > **Como** profesional, **quiero** poder modificar o retirar un presupuesto enviado **para** actualizar la oferta o cancelar mi participación antes de que el cliente lo acepte.
 
 - **Criterios de Aceptación**:
-  - El profesional debe poder editar el monto y el mensaje de un presupuesto en estado “pendiente” hasta que el cliente lo acepte.
-  - Si el profesional retira un presupuesto, el estado cambia a “retirado” y el cliente recibe una notificación de que el presupuesto ha sido cancelado.
+  - El profesional debe poder editar el monto y el mensaje de un presupuesto en estado "pendiente" hasta que el cliente lo acepte.
+  - Si el profesional retira un presupuesto, el estado cambia a "retirado" y el cliente recibe una notificación de que el presupuesto ha sido cancelado.
   - El profesional no puede modificar un presupuesto una vez que el cliente lo ha aceptado o rechazado.
   
 ---

@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { body, param } from 'express-validator';
+import { param } from 'express-validator';
 import * as UserController from '../controllers/user.controller';
 import authenticate from '../middlewares/auth.middleware';
 import { validateRequest } from '../middlewares/validation.middleware';
 import rateLimit from 'express-rate-limit';
-import { UserRole } from '@prisma/client';
+import { validateId, validateEmail, validatePassword, validateName, validateRole, validateProvince, validateLocality } from '../validations/user';
 
 const router = Router();
 
@@ -21,42 +21,7 @@ const updateUserLimiter = rateLimit({
   message: 'Demasiadas solicitudes de actualización desde esta IP, por favor intenta de nuevo más tarde.',
 });
 
-// Funciones reutilizables para validaciones
-const validateId = () => [
-  param('id')
-    .isUUID()
-    .withMessage('El ID proporcionado no es válido'),
-];
 
-const validateEmail = () => [
-  body('email')
-    .optional()
-    .isEmail()
-    .withMessage('Debe proporcionar un email válido'),
-];
-
-const validatePassword = (minLength: number) => [
-  body('password')
-    .optional()
-    .isLength({ min: minLength })
-    .withMessage(`La contraseña debe tener al menos ${minLength} caracteres`)
-    .matches(/\d/)
-    .withMessage('La contraseña debe contener al menos un número'),
-];
-
-const validateName = (field: string) => [
-  body(field)
-    .optional()
-    .notEmpty()
-    .withMessage(`El ${field} no puede estar vacío`),
-];
-
-const validateRole = () => [
-  body('role')
-    .optional()
-    .isIn([UserRole.CLIENT, UserRole.PROFESSIONAL])
-    .withMessage(`El rol debe ser ${UserRole.CLIENT} o ${UserRole.PROFESSIONAL}`),
-];
 
 // Validaciones para registro
 const registerValidation = [
@@ -65,6 +30,8 @@ const registerValidation = [
     ...validateName('firstName'),
     ...validateName('lastName'),
     ...validateRole(),
+    ...validateProvince(),
+    ...validateLocality(),
 ];
 
 // Validaciones para actualización de usuario
@@ -75,6 +42,8 @@ const updateUserValidation = [
   ...validateName('firstName'),
   ...validateName('lastName'),
   ...validateRole(),
+  ...validateProvince(),
+  ...validateLocality(),
 ];
 
 // Rutas públicas

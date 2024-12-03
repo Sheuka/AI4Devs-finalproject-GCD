@@ -16,3 +16,9 @@ export const assignProfessionalValidator = [
     param('id').isString().notEmpty().withMessage('ID del proyecto es obligatorio'),
     body('professionalId').isString().notEmpty().withMessage('ID del profesional es obligatorio'),
 ];
+
+export const updateProjectQuoteValidator = [
+    param('id').isString().notEmpty().withMessage('ID del proyecto es obligatorio'),
+    param('quoteId').isString().notEmpty().withMessage('ID del presupuesto es obligatorio'),
+    body('action').isString().notEmpty().isIn(['accept', 'reject']).withMessage('Acción es obligatoria'),
+];

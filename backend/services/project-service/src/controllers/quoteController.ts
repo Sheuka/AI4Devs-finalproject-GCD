@@ -4,8 +4,9 @@ import { QuoteCreateDTO, QuoteUpdateDTO } from '../types/quote.types';
 
 export const createQuoteHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const professionalId = req.user.userId; // Asumiendo que el ID del profesional está en el token
         const quoteData: QuoteCreateDTO = req.body;
-        const quote = await createQuote(quoteData);
+        const quote = await createQuote(quoteData, professionalId);
         res.status(201).json(quote);
     } catch (error) {
         next(error);

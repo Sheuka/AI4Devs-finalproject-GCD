@@ -20,15 +20,30 @@ enum UserRole {
 }
 
 model User {
-  id              String    @id @default(uuid())
-  email           String    @unique
-  password        String
-  firstName       String?
-  lastName        String?
-  role            UserRole  @default(CLIENT)
-  phoneNumber     String?   @unique
-  profilePicture  String?
-  isActive        Boolean   @default(true)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id             String   @id @default(uuid())
+  email          String   @unique
+  password       String
+  firstName      String?
+  lastName       String?
+  role           UserRole @default(CLIENT)
+  phoneNumber    String?  @unique
+  profilePicture String?
+  speciality     String?
+  province       String?
+  locality       String?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  ratings Rating[] @relation("UserRatings")
+}
+
+model Rating {
+  id        String   @id @default(uuid())
+  userId    String
+  rating    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation("UserRatings", fields: [userId], references: [id], onDelete: Cascade)
 }

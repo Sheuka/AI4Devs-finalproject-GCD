@@ -1,19 +1,9 @@
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
 import { config } from '../config';
 
 export class EmailService {
-  private transporter: nodemailer.Transporter;
-
   constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: config.SMTP_HOST,
-      port: config.SMTP_PORT,
-      secure: config.NODE_ENV === 'production',
-      auth: {
-        user: config.SMTP_USER,
-        pass: config.SMTP_PASSWORD
-      }
-    });
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
   }
 
   async sendPasswordResetEmail(email: string, resetToken: string): Promise<void> {
@@ -47,7 +37,7 @@ export class EmailService {
     };
 
     try {
-      await this.transporter.sendMail(mailOptions);
+      await sgMail.send(mailOptions);
     } catch (error) {
       console.error('Error al enviar email:', error);
       throw new Error('Error al enviar el email de recuperación de contraseña');
@@ -68,7 +58,7 @@ export class EmailService {
     };
 
     try {
-      await this.transporter.sendMail(mailOptions);
+      await sgMail.send(mailOptions);
     } catch (error) {
       console.error('Error al enviar email de bienvenida:', error);
       // No lanzamos error para no interrumpir el flujo de registro

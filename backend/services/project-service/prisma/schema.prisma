@@ -27,35 +27,54 @@ enum QuoteStatus {
 }
 
 model Project {
-  project_id        String         @id @default(uuid())
-  client_id         String
-  professional_id   String?        // Nuevo campo para asignar el proyecto a un profesional
-  title             String
-  description       String
-  status            ProjectStatus  @default(open)
-  created_at        DateTime       @default(now())
-  updated_at        DateTime       @updatedAt
+  project_id      String        @id @default(uuid())
+  client_id       String
+  professional_id String? // Nuevo campo para asignar el proyecto a un profesional
+  title           String
+  description     String
+  type            String
+  amount          Float
+  budget          Float?
+  start_date      String
+  status          ProjectStatus @default(open)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
 
-  quotes            Quote[]        @relation("ProjectQuotes")
-  
+  quotes        Quote[]       @relation("ProjectQuotes")
+  chat_messages ChatMessage[] @relation("ProjectChatMessages")
+
   @@index([client_id])
   @@index([status])
   @@index([professional_id]) // Índice para optimizar consultas por profesional
 }
 
 model Quote {
-  quote_id          String         @id @default(uuid())
-  project_id        String
-  professional_id   String         // ID del profesional que envía el presupuesto
-  amount            Float
-  message           String?
-  status            QuoteStatus    @default(pending)
-  created_at        DateTime       @default(now())
-  updated_at        DateTime       @updatedAt
+  quote_id        String      @id @default(uuid())
+  project_id      String
+  professional_id String // ID del profesional que envía el presupuesto
+  amount          Float
+  message         String?
+  estimated_time  String?
+  status          QuoteStatus @default(pending)
+  created_at      DateTime    @default(now())
+  updated_at      DateTime    @updatedAt
 
-  project           Project        @relation("ProjectQuotes", fields: [project_id], references: [project_id])
+  project Project @relation("ProjectQuotes", fields: [project_id], references: [project_id])
 
   @@index([project_id])
   @@index([professional_id])
   @@index([status])
+}
+
+model ChatMessage {
+  id         String   @id @default(uuid())
+  project    Project  @relation("ProjectChatMessages", fields: [project_id], references: [project_id])
+  project_id String
+  user_id    String
+  content    String
+  timestamp  DateTime @default(now())
+
+  @@index([project_id])
+  @@index([user_id])
+  @@index([timestamp])
 }

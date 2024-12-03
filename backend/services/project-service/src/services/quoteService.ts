@@ -1,5 +1,10 @@
 import { PrismaClient, Quote, QuoteStatus } from '@prisma/client';
 import { QuoteCreateDTO, QuoteUpdateDTO, QuoteResponseDTO } from '../types/quote.types';
+import { emailService } from './email.service';
+import axios from 'axios';
+import { config } from '../config';
+import { User } from '../models/user';
+import { getAuthToken } from './authService';
 
 const prisma = new PrismaClient();
 
@@ -9,7 +14,7 @@ const prisma = new PrismaClient();
  * @returns El presupuesto creado.
  * @throws Error si el proyecto no está en estado "open" o si el profesional ya ha enviado un presupuesto para este proyecto.
  */
-export const createQuote = async (quoteData: QuoteCreateDTO): Promise<QuoteResponseDTO> => {
+export const createQuote = async (quoteData: QuoteCreateDTO, professionalId: string): Promise<QuoteResponseDTO> => {
     // Verificar que el proyecto exista y esté en estado "open"
     const project = await prisma.project.findUnique({
         where: { project_id: quoteData.projectId },
@@ -27,7 +32,10 @@ export const createQuote = async (quoteData: QuoteCreateDTO): Promise<QuoteRespo
     const existingQuote = await prisma.quote.findFirst({
         where: {
             project_id: quoteData.projectId,
-            professional_id: quoteData.professionalId,
+            professional_id: professionalId,
+            status: {
+                not: QuoteStatus.rejected,
+            },
         },
     });
 
@@ -38,14 +46,23 @@ export const createQuote = async (quoteData: QuoteCreateDTO): Promise<QuoteRespo
     const quote = await prisma.quote.create({
         data: {
             project_id: quoteData.projectId,
-            professional_id: quoteData.professionalId,
-            amount: quoteData.amount,
-            message: quoteData.message,
+            professional_id: professionalId,
+            amount: Number(quoteData.amount),
+            message: quoteData.message ?? undefined,
+            estimated_time: quoteData.estimatedDuration ?? undefined,
             status: QuoteStatus.pending,
         },
     });
 
-    return mapQuoteToResponseDTO(quote);
+    const responseDTO = mapQuoteToResponseDTO(quote);
+
+    // Obtener el email del cliente
+    const clientEmail = await getClientEmail(project.client_id);
+
+    // Enviar correo al cliente
+    await emailService.sendQuoteCreatedEmail(clientEmail, project.title, responseDTO);
+
+    return responseDTO;
 };
 
 /**
@@ -96,10 +113,26 @@ export const updateQuote = async (
         data: {
             amount: updateData.amount ?? quote.amount,
             message: updateData.message ?? quote.message,
+            estimated_time: updateData.estimatedDuration ?? quote.estimated_time,
         },
     });
 
-    return mapQuoteToResponseDTO(updatedQuote);
+    const responseDTO = mapQuoteToResponseDTO(updatedQuote);
+
+    // Obtener el proyecto asociado
+    const project = await prisma.project.findUnique({
+        where: { project_id: updatedQuote.project_id },
+    });
+
+    if (project) {
+        // Obtener el email del cliente
+        const clientEmail = await getClientEmail(project.client_id);
+
+        // Enviar correo al cliente
+        await emailService.sendQuoteUpdatedEmail(clientEmail, project.title, responseDTO);
+    }
+
+    return responseDTO;
 };
 
 /**
@@ -161,7 +194,32 @@ const mapQuoteToResponseDTO = (quote: Quote): QuoteResponseDTO => ({
     professionalId: quote.professional_id,
     amount: quote.amount,
     message: quote.message ?? undefined,
+    estimatedDuration: quote.estimated_time ?? undefined,
     status: quote.status,
     createdAt: quote.created_at,
     updatedAt: quote.updated_at,
 });
+
+/**
+ * Obtiene el email del cliente desde el servicio de usuarios.
+ * @param clientId - ID del cliente.
+ * @returns Email del cliente.
+ * @throws Error si no se puede obtener el email.
+ */
+const getClientEmail = async (clientId: string): Promise<string> => {
+    try {
+        const token = await getAuthToken();
+
+        const response = await axios.get(`${config.USER_SERVICE_URL}/api/users/${clientId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        const user: User = response.data;
+        return user.email;
+    } catch (error) {
+        console.error(`Error al obtener el email del cliente con ID ${clientId}:`, error);
+        throw new Error('No se pudo obtener el email del cliente');
+    }
+};

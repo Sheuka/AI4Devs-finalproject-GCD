@@ -21,6 +21,12 @@ const forgotPasswordLimiter = rateLimit({
   message: 'Demasiadas solicitudes de recuperación desde esta IP, por favor intenta de nuevo más tarde.',
 });
 
+const tokenLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 20, // límite de 20 solicitudes por IP
+  message: 'Demasiadas solicitudes desde esta IP, por favor intenta de nuevo más tarde.',
+});
+
 // Funciones reutilizables para validaciones
 const validateEmail = () => [
   body('email')
@@ -80,6 +86,16 @@ const resetPasswordValidation = [
   ...validatePassword(8),
 ];
 
+// Validaciones para obtener el token
+const tokenValidation = [
+  body('clientId')
+    .notEmpty()
+    .withMessage('El clientId es requerido'),
+  body('secret')
+    .notEmpty()
+    .withMessage('El secret es requerido'),
+];
+
 // Rutas públicas
 router.post(
   '/register',
@@ -109,6 +125,14 @@ router.post(
   resetPasswordValidation,
   validateRequest,
   AuthController.resetPassword
+);
+
+router.post(
+  '/token',
+  tokenLimiter,
+  tokenValidation,
+  validateRequest,
+  AuthController.getAccessToken
 );
 
 // Rutas protegidas
